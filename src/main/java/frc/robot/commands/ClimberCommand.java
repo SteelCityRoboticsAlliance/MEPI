@@ -4,12 +4,14 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ClimberSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ClimberSubsystem;
+
 /** An example command that uses an example subsystem. */
 public class ClimberCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ClimberSubsystem m_subsystem;
+
   private final double m_speed;
   /**
    * Creates a new ClimberCommand.

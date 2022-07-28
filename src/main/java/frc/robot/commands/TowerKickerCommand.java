@@ -4,13 +4,14 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.TowerSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.TowerSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class TowerKickerCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final TowerSubsystem m_towerSubsystem;
+
   private final double m_speed = 0.75;
 
   /**
@@ -31,15 +32,14 @@ public class TowerKickerCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_towerSubsystem.setKickerSpeed(m_speed);;
+    m_towerSubsystem.setKickerSpeed(m_speed);
+    ;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_towerSubsystem.setKickerSpeed(0);
-      
-
   }
 
   // Returns true when the command should end.

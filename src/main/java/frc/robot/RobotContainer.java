@@ -5,10 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExampleCommand;
@@ -26,8 +27,6 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsytem;
 import frc.robot.subsystems.TowerSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-
 public class RobotContainer {
   private final XboxController m_joystick = new XboxController(0);
   // The robot's subsystems and commands are defined here...
@@ -46,13 +44,14 @@ public class RobotContainer {
   private final ShooterSubsytem m_shooterSubsytem = new ShooterSubsytem();
   private final TowerSubsystem m_towerSubsystem = new TowerSubsystem();
   private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
-  
+
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final RunIntakeCommand m_intakeInCommand = new RunIntakeCommand(m_intakeSubsystem, 1);
   private final RunIntakeCommand m_intakeOutCommand = new RunIntakeCommand(m_intakeSubsystem, -1);
   private final RunIntakeCommand m_intakeStopCommand = new RunIntakeCommand(m_intakeSubsystem, 0);
   private final DriveCommand m_driveCommand = new DriveCommand(m_drivetrainSubsystem, m_joystick);
-  private final ToggleIntakeCommand m_toggleIntakeCommand = new ToggleIntakeCommand(m_intakeSubsystem);
+  private final ToggleIntakeCommand m_toggleIntakeCommand =
+      new ToggleIntakeCommand(m_intakeSubsystem);
 
   public RobotContainer() {
     // Configure the button bindings
@@ -69,9 +68,8 @@ public class RobotContainer {
     testCommands.add("Tower Up", new TowerUpCommand(m_towerSubsystem));
     testCommands.add("Tower Down", new TowerDownCommand(m_towerSubsystem));
     testCommands.add("Tower Kicker", new TowerKickerCommand(m_towerSubsystem));
-    testCommands.add("Hopper Up", new HopperCommand(m_hopperSubsystem,0.5));
-    testCommands.add("Hopper Down", new HopperCommand(m_hopperSubsystem,-0.5));
-
+    testCommands.add("Hopper Up", new HopperCommand(m_hopperSubsystem, 0.5));
+    testCommands.add("Hopper Down", new HopperCommand(m_hopperSubsystem, -0.5));
   }
 
   /**
@@ -82,12 +80,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(m_joystick, XboxController.Button.kRightBumper.value)
-      .whenHeld(m_intakeInCommand);
+        .whenHeld(m_intakeInCommand);
     new JoystickButton(m_joystick, XboxController.Button.kLeftBumper.value)
-      .whenHeld(m_intakeOutCommand);
+        .whenHeld(m_intakeOutCommand);
     new JoystickButton(m_joystick, XboxController.Button.kB.value)
-      .whenPressed(m_toggleIntakeCommand);
-
+        .whenPressed(m_toggleIntakeCommand);
   }
 
   /**

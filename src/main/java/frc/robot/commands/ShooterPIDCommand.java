@@ -4,8 +4,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ShooterSubsytem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ShooterSubsytem;
 
 /** An example command that uses an example subsystem. */
 public class ShooterPIDCommand extends CommandBase {
@@ -30,7 +30,7 @@ public class ShooterPIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      m_shooterSubsystem.setPidRpm();
+    m_shooterSubsystem.setPidRpm();
   }
 
   // Called once the command ends or is interrupted.

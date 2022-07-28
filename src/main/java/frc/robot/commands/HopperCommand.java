@@ -4,13 +4,14 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.HopperSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.HopperSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class HopperCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final HopperSubsystem m_hopperSubsystem;
+
   private double m_speed;
   /**
    * Creates a new HopperCommand.
@@ -32,7 +33,7 @@ public class HopperCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      m_hopperSubsystem.setHopperSpeed(m_speed);
+    m_hopperSubsystem.setHopperSpeed(m_speed);
   }
 
   // Called once the command ends or is interrupted.

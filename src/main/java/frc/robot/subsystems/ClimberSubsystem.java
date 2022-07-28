@@ -3,9 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -20,9 +20,11 @@ public class ClimberSubsystem extends SubsystemBase {
     m_rightClimber.follow(m_leftClimber);
     m_leftClimber.setInverted(true);
   }
+
   public void set(double speed) {
-      m_leftClimber.set(speed);
+    m_leftClimber.set(speed);
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -33,4 +35,3 @@ public class ClimberSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 }
-

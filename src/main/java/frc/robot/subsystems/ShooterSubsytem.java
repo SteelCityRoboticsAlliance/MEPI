@@ -5,15 +5,16 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ShooterSubsytem extends SubsystemBase {
   /** Creates a new Shooter. */
   private final CANSparkMax m_shooterMotor;
+
   private final RelativeEncoder m_encoder;
   private final SparkMaxPIDController m_PIDController;
 
@@ -23,10 +24,8 @@ public class ShooterSubsytem extends SubsystemBase {
     m_PIDController = m_shooterMotor.getPIDController();
     m_shooterMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     m_shooterMotor.restoreFactoryDefaults();
-
-    
   }
-  
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -36,6 +35,7 @@ public class ShooterSubsytem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
   public void setPidRpm() {
     m_PIDController.setP(0);
     m_PIDController.setD(0);
