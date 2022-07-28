@@ -13,7 +13,7 @@ import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HopperCommand;
-import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.ShooterPIDCommand;
 import frc.robot.commands.ToggleIntakeCommand;
 import frc.robot.commands.TowerDownCommand;
@@ -48,9 +48,9 @@ public class RobotContainer {
   private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
   
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final IntakeCommand m_intakeInCommand = new IntakeCommand(m_intakeSubsystem, 1);
-  private final IntakeCommand m_intakeOutCommand = new IntakeCommand(m_intakeSubsystem, -1);
-  private final IntakeCommand m_intakeStopCommand = new IntakeCommand(m_intakeSubsystem, 0);
+  private final RunIntakeCommand m_intakeInCommand = new RunIntakeCommand(m_intakeSubsystem, 1);
+  private final RunIntakeCommand m_intakeOutCommand = new RunIntakeCommand(m_intakeSubsystem, -1);
+  private final RunIntakeCommand m_intakeStopCommand = new RunIntakeCommand(m_intakeSubsystem, 0);
   private final DriveCommand m_driveCommand = new DriveCommand(m_drivetrainSubsystem, m_joystick);
   private final ToggleIntakeCommand m_toggleIntakeCommand = new ToggleIntakeCommand(m_intakeSubsystem);
 
@@ -63,8 +63,8 @@ public class RobotContainer {
 
     testCommands.add("ClimbUp", new ClimberCommand(m_climberSubsystem, 0.75));
     testCommands.add("ClimbDown", new ClimberCommand(m_climberSubsystem, -0.75));
-    testCommands.add("IntakeIn", new IntakeCommand(m_intakeSubsystem, 0.75));
-    testCommands.add("IntakeOut", new IntakeCommand(m_intakeSubsystem, -0.75));
+    testCommands.add("IntakeIn", new RunIntakeCommand(m_intakeSubsystem, 0.75));
+    testCommands.add("IntakeOut", new RunIntakeCommand(m_intakeSubsystem, -0.75));
     testCommands.add("Shoot RPM", new ShooterPIDCommand(m_shooterSubsytem));
     testCommands.add("Tower Up", new TowerUpCommand(m_towerSubsystem));
     testCommands.add("Tower Down", new TowerDownCommand(m_towerSubsystem));
