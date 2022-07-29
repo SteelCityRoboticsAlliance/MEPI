@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -85,6 +86,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void applyWheelSpeed(DifferentialDriveWheelSpeeds speeds) {
     m_leftController.setReference(speeds.leftMetersPerSecond, ControlType.kSmartVelocity);
     m_rightController.setReference(speeds.rightMetersPerSecond, ControlType.kSmartVelocity);
+  }
+
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
   }
 
   public void updateDrivePID() {
