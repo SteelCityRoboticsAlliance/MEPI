@@ -13,8 +13,14 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final int TOWER_SPARK = 8;
-    public static final int TOWER_KICKER_SPARK = 9;
-    public static final int SHOOTER_SPARK = 10;
-    public static final int HOPPER_SPARK = 7;
+  public static final int DRIVE_LEFT_LEADER = 2;
+  public static final int DRIVE_LEFT_FOLLOWER = 3;
+  public static final int DRIVE_RIGHT_LEADER = 4;
+  public static final int DRIVE_RIGHT_FOLLOWER = 5;
+  public static final int TOWER_SPARK = 8;
+  public static final int TOWER_KICKER_SPARK = 9;
+  public static final int SHOOTER_SPARK = 10;
+  public static final int HOPPER_SPARK = 7;
+  public static final double DRIVE_CONVERSION_FACTOR = 1;
+  public static final double DRIVE_TRACK = 0; // TODO
 }
