@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
   private CANSparkMax m_motor = new CANSparkMax(6, MotorType.kBrushless);
-  private DoubleSolenoid m_leftSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
-  private DoubleSolenoid m_rightSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 7, 6);
+  private DoubleSolenoid m_solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
     m_motor.restoreFactoryDefaults();
@@ -27,18 +26,15 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void extend() {
-    m_leftSolenoid.set(Value.kForward);
-    m_rightSolenoid.set(Value.kForward);
+    m_solenoid.set(Value.kForward);
   }
 
   public void retract() {
-    m_leftSolenoid.set(Value.kReverse);
-    m_rightSolenoid.set(Value.kReverse);
+    m_solenoid.set(Value.kReverse);
   }
 
   public void toggle() {
-    m_leftSolenoid.toggle();
-    m_rightSolenoid.toggle();
+    m_solenoid.toggle();
   }
 
   @Override
