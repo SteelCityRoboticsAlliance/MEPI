@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import javax.swing.text.html.AccessibleHTML.TableElementInfo.TableAccessibleContext;
+import javax.swing.text.ithtml.AccessibleHTML.TableElementInfo.TableAccessibleContext;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
