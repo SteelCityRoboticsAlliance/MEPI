@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,15 +16,16 @@ public class ClimberSubsystem extends SubsystemBase {
   private CANSparkMax m_rightClimber = new CANSparkMax(11, MotorType.kBrushless);
   private DigitalInput m_leftLimitSwitch = new DigitalInput(Constants.LEFT_LIMIT_SWITCH);
   private DigitalInput m_rightLimitSwitch = new DigitalInput(Constants.RIGHT_LIMIT_SWITCH);
+  private RelativeEncoder m_leftEncoder = m_leftClimber.getEncoder();
+  private RelativeEncoder m_rightEncoder = m_rightClimber.getEncoder();
 
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     m_leftClimber.restoreFactoryDefaults();
     m_rightClimber.restoreFactoryDefaults();
+    m_leftClimber.setInverted(true);
 
-    m_rightClimber.setInverted(true);
-
-    m_rightClimber.follow(m_leftClimber);
+    m_rightClimber.follow(m_leftClimber, true);
   }
 
   public void set(double speed) {
@@ -41,6 +43,12 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (leftLimitSwitchPress()) {
+      m_leftEncoder.setPosition(0);
+    }
+    if (rightLimitSwitchPress()) {
+      m_rightEncoder.setPosition(0);      
+    }
   }
 
   @Override
