@@ -28,4 +28,8 @@ public final class Constants {
   // DIO
   public static final int LEFT_LIMIT_SWITCH = 1;
   public static final int RIGHT_LIMIT_SWITCH = 9;
+
+  // Auto Aim
+  public static final double MAX_TURN_VELOCITY = 0.5;
+  public static final double MAX_TURN_ACCELERATION = 0.5;
 }
