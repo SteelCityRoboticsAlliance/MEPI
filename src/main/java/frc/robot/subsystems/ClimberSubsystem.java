@@ -5,8 +5,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -47,7 +47,7 @@ public class ClimberSubsystem extends SubsystemBase {
       m_leftEncoder.setPosition(0);
     }
     if (rightLimitSwitchPress()) {
-      m_rightEncoder.setPosition(0);      
+      m_rightEncoder.setPosition(0);
     }
   }
 
