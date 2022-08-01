@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
   private CANSparkMax m_motor = new CANSparkMax(6, MotorType.kBrushless);
-  private DoubleSolenoid m_solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+  private DoubleSolenoid m_solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 6, 7);
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
     m_motor.restoreFactoryDefaults();

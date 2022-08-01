@@ -72,6 +72,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightEncoder.setVelocityConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
 
     SmartDashboard.putData(m_field);
+    updateDrivePID();
   }
 
   public void control(double speed, double rotation) {
