@@ -10,7 +10,11 @@ public class TunableNumber {
   private static final String tableKey = "TunableNumbers";
 
   private String key;
-  private double defaultValue;
+  private double defaultValue;o
+
+
+
+  
   private double lastHasChangedValue = defaultValue;
 
   /**
