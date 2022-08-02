@@ -4,9 +4,15 @@
 
 package frc.robot.commands;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -14,7 +20,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 /** An example command that uses an example subsystem. */
 public class TrajectoryCommand extends CommandBase {
   private final DrivetrainSubsystem m_subsystem;
-  private final Trajectory m_trajectory;
+  private Trajectory m_trajectory = null;
   private final Timer m_timer;
   private final RamseteController m_controller;
 
@@ -23,9 +29,14 @@ public class TrajectoryCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TrajectoryCommand(DrivetrainSubsystem subsystem, Trajectory trajectory) {
+  public TrajectoryCommand(DrivetrainSubsystem subsystem, String trajectoryPathName) {
     m_subsystem = subsystem;
-    m_trajectory = trajectory;
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryPathName);
+      m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryPathName, ex.getStackTrace());
+    }
     m_timer = new Timer();
     m_controller = new RamseteController();
 
@@ -47,8 +58,8 @@ public class TrajectoryCommand extends CommandBase {
     m_subsystem.applyChassisSpeed(adjustedSpeeds);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
+  // Called once the command ends or is interrupted.
   public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
