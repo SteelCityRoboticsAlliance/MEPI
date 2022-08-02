@@ -9,12 +9,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.HopperCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.HopperSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,7 +30,7 @@ public class RobotContainer {
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   // private final ShooterSubsytem m_shooterSubsytem = new ShooterSubsytem();
   // private final TowerSubsystem m_towerSubsystem = new TowerSubsystem();
-  private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
+  // private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   // private final RunIntakeCommand m_intakeInCommand = new RunIntakeCommand(m_intakeSubsystem, 1);
@@ -48,8 +47,9 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     // m_intakeSubsystem.setDefaultCommand(m_intakeStopCommand);
-    m_hopperSubsystem.setDefaultCommand(new HopperCommand(m_hopperSubsystem, 0));
+    // m_hopperSubsystem.setDefaultCommand(new HopperCommand(m_hopperSubsystem, 0));
     // m_drivetrainSubsystem.setDefaultCommand(m_driveCommand);
+    m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, 0));
     ShuffleboardTab testCommands = Shuffleboard.getTab("test commands");
 
     testCommands.add("ClimbUp", new ClimberCommand(m_climberSubsystem, 0.25));
@@ -77,6 +77,10 @@ public class RobotContainer {
     // .whenHeld(m_intakeOutCommand.alongWith(new HopperCommand(m_hopperSubsystem, -1)));
     // new JoystickButton(m_joystick, XboxController.Button.kB.value)
     // .whenPressed(m_toggleIntakeCommand);
+    new JoystickButton(m_joystick, XboxController.Button.kLeftBumper.value)
+        .whenHeld(new ClimberCommand(m_climberSubsystem, 0.5));
+    new JoystickButton(m_joystick, XboxController.Button.kRightBumper.value)
+        .whenHeld(new ClimberCommand(m_climberSubsystem, -0.5));
   }
 
   /**
