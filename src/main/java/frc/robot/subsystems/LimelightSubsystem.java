@@ -29,7 +29,7 @@ public class LimelightSubsystem extends SubsystemBase {
     double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
     // calculate distance
-    return (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
+    return (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
   }
 
   public double limelightAngle() {
