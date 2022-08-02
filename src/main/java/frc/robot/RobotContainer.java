@@ -26,6 +26,7 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsytem;
 import frc.robot.subsystems.TowerSubsystem;
+import edu.wpi.first.wpilibj2.command.button.Button;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,13 +45,20 @@ public class RobotContainer {
   private final TowerSubsystem m_towerSubsystem = new TowerSubsystem();
   private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
 
+
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final RunIntakeCommand m_intakeInCommand = new RunIntakeCommand(m_intakeSubsystem, 1);
-  private final RunIntakeCommand m_intakeOutCommand = new RunIntakeCommand(m_intakeSubsystem, -1);
-  private final RunIntakeCommand m_intakeStopCommand = new RunIntakeCommand(m_intakeSubsystem, 0);
-  private final DriveCommand m_driveCommand = new DriveCommand(m_drivetrainSubsystem, m_joystick);
+  private final RunIntakeCommand m_intakeInCommand = new RunIntakeCommand(m_intakeSubsystem, 0.75, m_hopperSubsystem);
+  private final RunIntakeCommand m_intakeOutCommand = new RunIntakeCommand(m_intakeSubsystem,
+  -0.75, m_hopperSubsystem);
+  private final RunIntakeCommand m_intakeStopCommand = new RunIntakeCommand(m_intakeSubsystem,
+  0, m_hopperSubsystem);
+  private final DriveCommand m_driveCommand = new DriveCommand(m_drivetrainSubsystem,
+  m_joystick);
   private final ToggleIntakeCommand m_toggleIntakeCommand =
-      new ToggleIntakeCommand(m_intakeSubsystem);
+  new ToggleIntakeCommand(m_intakeSubsystem);
+  private final TowerUpCommand m_towerUpCommand = new TowerUpCommand(m_towerSubsystem);
+
+  private final TunableNumber m_tunableShooterGoal = new TunableNumber("Shooter Goal", 1000);
 
   public RobotContainer() {
     // Configure the button bindings
@@ -58,13 +66,15 @@ public class RobotContainer {
     m_intakeSubsystem.setDefaultCommand(m_intakeStopCommand);
     m_hopperSubsystem.setDefaultCommand(new HopperCommand(m_hopperSubsystem, 0));
     m_drivetrainSubsystem.setDefaultCommand(m_driveCommand);
+    m_drivetrainSubsystem.setDefaultCommand(m_driveCommand);
+    // m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, 0));
     ShuffleboardTab testCommands = Shuffleboard.getTab("test commands");
 
     // testCommands.add("ClimbUp", new ClimberCommand(m_climberSubsystem, 0.25));
     // testCommands.add("ClimbDown", new ClimberCommand(m_climberSubsystem, -0.25));
-    testCommands.add("IntakeIn", new RunIntakeCommand(m_intakeSubsystem, 0.75));
-    testCommands.add("IntakeOut", new RunIntakeCommand(m_intakeSubsystem, -0.75));
-    testCommands.add("Shoot RPM", new ShooterPIDCommand(m_shooterSubsytem, 1000));
+    testCommands.add("IntakeIn", new RunIntakeCommand(m_intakeSubsystem, 0.75, m_hopperSubsystem));
+    testCommands.add("IntakeOut", new RunIntakeCommand(m_intakeSubsystem, -0.75, m_hopperSubsystem));
+    testCommands.add("Shoot RPM", new ShooterPIDCommand(m_shooterSubsytem, m_tunableShooterGoal.get()));
     testCommands.add("Tower Up", new TowerUpCommand(m_towerSubsystem));
     testCommands.add("Tower Down", new TowerDownCommand(m_towerSubsystem));
     testCommands.add("Tower Kicker", new TowerKickerCommand(m_towerSubsystem));
@@ -80,17 +90,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(m_joystick, XboxController.Button.kRightBumper.value)
-        .whenHeld(m_intakeInCommand.alongWith(new HopperCommand(m_hopperSubsystem, 1)));
+    .whenHeld(m_intakeInCommand);
     new JoystickButton(m_joystick, XboxController.Button.kLeftBumper.value)
-        .whenHeld(m_intakeOutCommand.alongWith(new HopperCommand(m_hopperSubsystem, -1)));
+    .whenHeld(m_towerUpCommand);
     new JoystickButton(m_joystick, XboxController.Button.kB.value)
-        .whenPressed(m_toggleIntakeCommand);
-    new JoystickButton(m_joystick, XboxController.Button.kX.value)
-        .whenHeld(new TowerUpCommand(m_towerSubsystem));
-    new JoystickButton(m_joystick, XboxController.Button.kY.value)
-        .whenHeld(new TowerKickerCommand(m_towerSubsystem));
-    new JoystickButton(m_joystick, XboxController.Button.kA.value)
-        .whenHeld(new ShooterPIDCommand(m_shooterSubsytem, 1000));
+    .whenPressed(m_intakeOutCommand);
+    new Button(() -> m_joystick.getLeftTriggerAxis() > 0.5).whileHeld(new TowerKickerCommand(m_towerSubsystem));
+    // new Button(() -> m_joystick.getRightTriggerAxis() > 0.5).whileHeld(new ShooterPIDCommand(m_shooterSubsystem));
+
   }
 
   /**
