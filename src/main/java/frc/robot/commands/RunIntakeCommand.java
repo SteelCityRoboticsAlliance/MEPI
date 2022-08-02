@@ -6,11 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class RunIntakeCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final IntakeSubsystem m_subsystem;
+  private final IntakeSubsystem m_intakeSubsystem;
+  private final HopperSubsystem m_hopperSubsystem;
 
   private final double m_speed;
   /**
@@ -18,11 +20,13 @@ public class RunIntakeCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public RunIntakeCommand(IntakeSubsystem subsystem, double speed) {
-    m_subsystem = subsystem;
+  public RunIntakeCommand(IntakeSubsystem intakeSubsystem, double speed, HopperSubsystem hopperSubsystem) {
+    m_intakeSubsystem = intakeSubsystem;
+    m_hopperSubsystem = hopperSubsystem;
     m_speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(intakeSubsystem);
+    addRequirements(hopperSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -32,12 +36,16 @@ public class RunIntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_subsystem.set(m_speed);
+    m_intakeSubsystem.set(m_speed);
+    m_hopperSubsystem.setHopperSpeed(m_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_intakeSubsystem.set(0);
+    m_hopperSubsystem.setHopperSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override
