@@ -37,6 +37,7 @@ public class ShooterSubsytem extends SubsystemBase {
     m_PIDController = m_shooterMotor.getPIDController();
     m_shooterMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     m_shooterMotor.restoreFactoryDefaults();
+    m_shooterMotor.setInverted(true);
   }
 
   @Override
