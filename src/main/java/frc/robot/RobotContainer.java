@@ -10,16 +10,18 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+// import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.HopperCommand;
 import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.SetShooterSpeedCommand;
 import frc.robot.commands.ShooterPIDCommand;
 import frc.robot.commands.ToggleIntakeCommand;
 import frc.robot.commands.TowerDownCommand;
 import frc.robot.commands.TowerKickerCommand;
 import frc.robot.commands.TowerUpCommand;
-import frc.robot.subsystems.ClimberSubsystem;
+// import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -27,6 +29,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsytem;
 import frc.robot.subsystems.TowerSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.commands.ShooterPIDCommand;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,7 +44,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  // private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final ShooterSubsytem m_shooterSubsytem = new ShooterSubsytem();
   private final TowerSubsystem m_towerSubsystem = new TowerSubsystem();
   private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
@@ -96,7 +100,16 @@ public class RobotContainer {
     new JoystickButton(m_joystick, XboxController.Button.kB.value)
     .whenPressed(m_intakeOutCommand);
     new Button(() -> m_joystick.getLeftTriggerAxis() > 0.5).whileHeld(new TowerKickerCommand(m_towerSubsystem));
-    // new Button(() -> m_joystick.getRightTriggerAxis() > 0.5).whileHeld(new ShooterPIDCommand(m_shooterSubsystem));
+    new Button(() -> m_joystick.getRightTriggerAxis() > 0.5).whileHeld(new ShooterPIDCommand(m_shooterSubsytem, m_tunableShooterGoal.get()));
+    new JoystickButton(m_joystick, XboxController.Button.kX.value)
+    .whenHeld(new SetShooterSpeedCommand(m_shooterSubsytem)).whenReleased(() -> m_shooterSubsytem.setShooterSpeed(0));
+    // new JoystickButton(m_joystick, XboxController.Button.kY.value)
+    // .whenPressed(new ClimberCommand(m_climberSubsystem, 0.5));
+    // new JoystickButton(m_joystick, XboxController.Button.kA.value)
+    // .whenPressed(new ClimberCommand(m_climberSubsystem, -0.5));
+    new POVButton(m_joystick, 0).whenPressed(new ToggleIntakeCommand(m_intakeSubsystem));
+    new POVButton(m_joystick, 180).whileHeld(new TowerDownCommand(m_towerSubsystem));
+
 
   }
 

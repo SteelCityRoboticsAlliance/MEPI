@@ -59,11 +59,8 @@ public class TunableNumber {
    * @return The current value
    */
   public double get() {
-    if (hasChanged()) {
-      return SmartDashboard.getNumber(key, defaultValue);
-    } else {
-      return getDefault();
-    }
+    // System.out.println("place 1");
+    return SmartDashboard.getNumber(key, defaultValue);
   }
 
   /**
@@ -73,12 +70,12 @@ public class TunableNumber {
    *     otherwise
    */
   public boolean hasChanged() {
+    // System.out.println("place 2");
     double currentValue = get();
     if (currentValue != lastHasChangedValue) {
       lastHasChangedValue = currentValue;
       return true;
     }
-
     return false;
   }
 }

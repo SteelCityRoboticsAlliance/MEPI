@@ -18,6 +18,7 @@ import frc.robot.TunableNumber;
 public class ShooterSubsytem extends SubsystemBase {
   /** Creates a new Shooter. */
   private final CANSparkMax m_shooterMotor;
+  private final CANSparkMax m_hoodMotor;
 
   private final ShooterLookupTable m_shooterLookupTable;
   private final RelativeEncoder m_encoder;
@@ -32,18 +33,22 @@ public class ShooterSubsytem extends SubsystemBase {
 
   public ShooterSubsytem() {
     m_shooterMotor = new CANSparkMax(Constants.SHOOTER_SPARK, MotorType.kBrushless);
+    m_hoodMotor = new CANSparkMax(Constants.SHOOTER_HOOD_SPARK, MotorType.kBrushless);
     m_shooterLookupTable = new ShooterLookupTable();
     m_encoder = m_shooterMotor.getEncoder();
     m_PIDController = m_shooterMotor.getPIDController();
     m_shooterMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     m_shooterMotor.restoreFactoryDefaults();
     m_shooterMotor.setInverted(true);
+    m_shooterMotor.burnFlash();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    configurePID();
+    if (m_tunableNumberkP.hasChanged() || m_tunableNumberkI.hasChanged() || m_tunableNumberkD.hasChanged() || m_tunableNumberkFF.hasChanged() || m_tunableAllowableError.hasChanged()) {
+      configurePID();
+    }
     SmartDashboard.putNumber("shooterRpm", getRPM());
   }
 
@@ -75,5 +80,9 @@ public class ShooterSubsytem extends SubsystemBase {
 
   public void shootFromDistance(double distance) {
     setPidRpm(m_shooterLookupTable.getRpmTable(distance));
+  }
+
+  public void setShooterSpeed(double speed) {
+    m_shooterMotor.set(speed);
   }
 }

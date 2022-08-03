@@ -21,6 +21,8 @@ public class TowerSubsystem extends SubsystemBase {
     m_towerKicker.setIdleMode(CANSparkMax.IdleMode.kCoast);
     m_towerMotor.restoreFactoryDefaults();
     m_towerKicker.restoreFactoryDefaults();
+    m_towerKicker.burnFlash();
+    m_towerMotor.burnFlash();
   }
 
   @Override

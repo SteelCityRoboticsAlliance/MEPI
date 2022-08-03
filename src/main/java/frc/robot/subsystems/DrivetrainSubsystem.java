@@ -60,6 +60,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_leftFollower.restoreFactoryDefaults();
     m_rightLeader.restoreFactoryDefaults();
     m_rightFollower.restoreFactoryDefaults();
+    m_leftLeader.burnFlash();
+    m_leftFollower.burnFlash();
+    m_rightLeader.burnFlash();
+    m_rightFollower.burnFlash();
 
     m_leftLeader.setInverted(true);
 
@@ -72,7 +76,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightEncoder.setVelocityConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
 
     SmartDashboard.putData(m_field);
-    updateDrivePID();
+    if (m_velocityP.hasChanged() || m_velocityI.hasChanged() || m_velocityD.hasChanged()) {
+      updateDrivePID();
+    }
+
+
   }
 
   public void control(double speed, double rotation) {

@@ -24,6 +24,8 @@ public class ClimberSubsystem extends SubsystemBase {
     m_leftClimber.restoreFactoryDefaults();
     m_rightClimber.restoreFactoryDefaults();
     m_leftClimber.setInverted(true);
+    m_leftClimber.burnFlash();
+    m_rightClimber.burnFlash();
 
     m_rightClimber.follow(m_leftClimber, true);
   }
