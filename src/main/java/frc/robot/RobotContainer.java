@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -65,6 +66,7 @@ public class RobotContainer {
   private final TunableNumber m_tunableShooterGoal = new TunableNumber("Shooter Goal", 1000);
 
   public RobotContainer() {
+    CameraServer.startAutomaticCapture();
     // Configure the button bindings
     configureButtonBindings();
     m_intakeSubsystem.setDefaultCommand(m_intakeStopCommand);
