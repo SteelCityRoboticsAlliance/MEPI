@@ -18,6 +18,7 @@ import frc.robot.TunableNumber;
 public class ShooterSubsytem extends SubsystemBase {
   /** Creates a new Shooter. */
   private final CANSparkMax m_shooterMotor;
+
   private final CANSparkMax m_hoodMotor;
 
   private final ShooterLookupTable m_shooterLookupTable;
@@ -30,6 +31,8 @@ public class ShooterSubsytem extends SubsystemBase {
   private final TunableNumber m_tunableAllowableError =
       new TunableNumber("Shooter(AllowableError))", 50);
   private final double m_afterEncoderReduction = 0.5;
+  public static final double FENDER_RPM = 1000;
+  // TODO
 
   public ShooterSubsytem() {
     m_shooterMotor = new CANSparkMax(Constants.SHOOTER_SPARK, MotorType.kBrushless);
@@ -46,7 +49,11 @@ public class ShooterSubsytem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (m_tunableNumberkP.hasChanged() || m_tunableNumberkI.hasChanged() || m_tunableNumberkD.hasChanged() || m_tunableNumberkFF.hasChanged() || m_tunableAllowableError.hasChanged()) {
+    if (m_tunableNumberkP.hasChanged()
+        || m_tunableNumberkI.hasChanged()
+        || m_tunableNumberkD.hasChanged()
+        || m_tunableNumberkFF.hasChanged()
+        || m_tunableAllowableError.hasChanged()) {
       configurePID();
     }
     SmartDashboard.putNumber("shooterRpm", getRPM());

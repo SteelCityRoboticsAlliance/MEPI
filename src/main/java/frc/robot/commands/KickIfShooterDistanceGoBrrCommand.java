@@ -4,30 +4,34 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.ShooterLookupTable;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsytem;
+import frc.robot.subsystems.TowerSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class ShootFromDistanceCommand extends CommandBase {
+public class KickIfShooterDistanceGoBrrCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterSubsytem m_shooterSubsystem;
 
-  private final ShooterLookupTable m_shooterLookupTable;
   private final LimelightSubsystem m_limelightSubsystem;
-
+  private final TowerSubsystem m_towerSubsystem;
+  private final ShooterLookupTable m_shooterLookupTable;
   /**
-   * Creates a new ShootFromDistanceCommand.
+   * Creates a new KickIfShooterGoBrrCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShootFromDistanceCommand(
+  public KickIfShooterDistanceGoBrrCommand(
       ShooterSubsytem subsystem,
-      LimelightSubsystem limelightsubsystem,
+      TowerSubsystem towerSubsystem,
+      LimelightSubsystem limelightSubsystem,
       ShooterLookupTable shooterLookupTable) {
     m_shooterSubsystem = subsystem;
-    m_limelightSubsystem = limelightsubsystem;
+    m_towerSubsystem = towerSubsystem;
+    m_limelightSubsystem = limelightSubsystem;
     m_shooterLookupTable = shooterLookupTable;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
-    addRequirements(limelightsubsystem);
+    addRequirements(towerSubsystem);
+    addRequirements(limelightSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -37,7 +41,11 @@ public class ShootFromDistanceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.shootFromDistance(m_limelightSubsystem.limelightDistance());
+    double distance = m_limelightSubsystem.limelightDistance();
+    m_shooterSubsystem.shootFromDistance(distance);
+    if (m_shooterSubsystem.checkAtSpeed(m_shooterLookupTable.getRpmTable(distance))) {
+      m_towerSubsystem.setKickerSpeed(1);
+    }
   }
 
   // Called once the command ends or is interrupted.

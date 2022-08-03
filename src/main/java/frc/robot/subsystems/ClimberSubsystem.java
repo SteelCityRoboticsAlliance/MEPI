@@ -31,6 +31,9 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void set(double speed) {
+    if (speed < 0 && (leftLimitSwitchPress() || rightLimitSwitchPress())) {
+      speed = 0;
+    }
     m_leftClimber.set(speed);
   }
 

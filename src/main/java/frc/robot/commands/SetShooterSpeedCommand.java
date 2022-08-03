@@ -11,14 +11,16 @@ import frc.robot.subsystems.ShooterSubsytem;
 public class SetShooterSpeedCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterSubsytem m_shooterSubsystem;
+  private double m_goal;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SetShooterSpeedCommand(ShooterSubsytem shooterSubsystem) {
+  public SetShooterSpeedCommand(ShooterSubsytem shooterSubsystem, double goal) {
     m_shooterSubsystem = shooterSubsystem;
+    m_goal = goal;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
   }
@@ -30,7 +32,7 @@ public class SetShooterSpeedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.setShooterSpeed(0.5);
+    m_shooterSubsystem.setShooterSpeed(m_goal);
   }
 
   // Called once the command ends or is interrupted.

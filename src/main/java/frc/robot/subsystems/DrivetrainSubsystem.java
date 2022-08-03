@@ -79,8 +79,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     if (m_velocityP.hasChanged() || m_velocityI.hasChanged() || m_velocityD.hasChanged()) {
       updateDrivePID();
     }
-
-
   }
 
   public void control(double speed, double rotation) {

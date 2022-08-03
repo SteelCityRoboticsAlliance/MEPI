@@ -33,7 +33,7 @@ public class ShooterPIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.setPidRpm(m_shooterSubsystem.getRPM());
+    m_shooterSubsystem.setPidRpm(m_goal);
   }
 
   // Called once the command ends or is interrupted.
