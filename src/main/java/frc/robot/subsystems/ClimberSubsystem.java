@@ -7,10 +7,16 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 
 public class ClimberSubsystem extends SubsystemBase {
   private CANSparkMax m_leftClimber = new CANSparkMax(Constants.CLIMBER_LEFT, MotorType.kBrushless);
@@ -20,7 +26,11 @@ public class ClimberSubsystem extends SubsystemBase {
   private DigitalInput m_rightLimitSwitch = new DigitalInput(Constants.RIGHT_LIMIT_SWITCH);
   private RelativeEncoder m_leftEncoder = m_leftClimber.getEncoder();
   private RelativeEncoder m_rightEncoder = m_rightClimber.getEncoder();
+  private ProfiledPIDController m_climberPID = new ProfiledPIDController(
+    3.5, 0.0, 0.0, new Constraints (20.0,150.0), 0.02);
 
+  private final double m_encoderReduction = 12 * 50 / 20;
+  
   /** Creates a new ClimberSubsystem. */
   public ClimberSubsystem() {
     m_leftClimber.restoreFactoryDefaults();
@@ -32,6 +42,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
     m_rightClimber.follow(m_leftClimber, true);
   }
+  public void RunClimberPID(double goal) {
+    m_climberPID.setGoal(goal);
+    set(m_climberPID.calculate(m_leftEncoder.getPosition()));
+  }
+
 
   public void set(double speed) {
     if (speed > 0 && (leftLimitSwitchPress() || rightLimitSwitchPress())) {
@@ -39,13 +54,17 @@ public class ClimberSubsystem extends SubsystemBase {
     }
     m_leftClimber.set(speed);
   }
-
+  
   public boolean leftLimitSwitchPress() {
     return !m_leftLimitSwitch.get();
   }
 
   public boolean rightLimitSwitchPress() {
     return !m_rightLimitSwitch.get();
+  }
+
+  public double getPIDPosition() {
+    return m_leftEncoder.getPosition();
   }
 
   @Override
@@ -59,6 +78,7 @@ public class ClimberSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putBoolean("climber limit switch pressed", leftLimitSwitchPress());
+    SmartDashboard.putNumber("climb left encoder", m_leftEncoder.getPosition());
   }
 
   @Override
