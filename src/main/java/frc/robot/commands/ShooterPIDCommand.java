@@ -22,7 +22,6 @@ public class ShooterPIDCommand extends CommandBase {
    */
   public ShooterPIDCommand(ShooterSubsytem shooterSubsystem) {
     m_shooterSubsystem = shooterSubsystem;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
   }
