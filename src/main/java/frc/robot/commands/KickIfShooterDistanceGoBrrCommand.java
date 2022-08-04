@@ -45,12 +45,16 @@ public class KickIfShooterDistanceGoBrrCommand extends CommandBase {
     m_shooterSubsystem.shootFromDistance(distance);
     if (m_shooterSubsystem.checkAtSpeed(m_shooterLookupTable.getRpmTable(distance))) {
       m_towerSubsystem.setKickerSpeed(1);
+      m_towerSubsystem.setTowerSpeed(0.75);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_towerSubsystem.setTowerSpeed(0);
+    m_towerSubsystem.setKickerSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override
