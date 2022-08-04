@@ -7,7 +7,9 @@ import java.util.TreeMap;
 public class ShooterLookupTable {
   private final NavigableMap<Double, Double> m_list = new TreeMap<>();
 
-  public ShooterLookupTable() {}
+  public ShooterLookupTable() {
+    // fender at 1400\
+  }
 
   public double getRpmTable(double distance) {
 

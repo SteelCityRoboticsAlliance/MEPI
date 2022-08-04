@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.TunableNumber;
 import frc.robot.subsystems.ShooterSubsytem;
 
 /** An example command that uses an example subsystem. */
@@ -12,16 +13,16 @@ public class ShooterPIDCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterSubsytem m_shooterSubsystem;
 
-  private final double m_goal;
+  private final TunableNumber m_tunableShooterGoal = new TunableNumber("Shooter Goal", 1000);
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShooterPIDCommand(ShooterSubsytem shooterSubsystem, double goal) {
+  public ShooterPIDCommand(ShooterSubsytem shooterSubsystem) {
     m_shooterSubsystem = shooterSubsystem;
-    m_goal = goal;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
   }
@@ -33,7 +34,7 @@ public class ShooterPIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.setPidRpm(m_goal);
+    m_shooterSubsystem.setPidRpm(m_tunableShooterGoal.get());
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +44,6 @@ public class ShooterPIDCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_shooterSubsystem.checkAtSpeed(m_goal);
+    return m_shooterSubsystem.checkAtSpeed(m_tunableShooterGoal.get());
   }
 }

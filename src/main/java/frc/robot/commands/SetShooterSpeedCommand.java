@@ -11,6 +11,7 @@ import frc.robot.subsystems.ShooterSubsytem;
 public class SetShooterSpeedCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterSubsytem m_shooterSubsystem;
+
   private double m_goal;
 
   /**

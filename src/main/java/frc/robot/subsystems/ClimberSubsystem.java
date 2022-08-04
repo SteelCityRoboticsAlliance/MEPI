@@ -8,12 +8,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
-  private CANSparkMax m_leftClimber = new CANSparkMax(10, MotorType.kBrushless);
-  private CANSparkMax m_rightClimber = new CANSparkMax(11, MotorType.kBrushless);
+  private CANSparkMax m_leftClimber = new CANSparkMax(Constants.CLIMBER_LEFT, MotorType.kBrushless);
+  private CANSparkMax m_rightClimber =
+      new CANSparkMax(Constants.CLIMBER_RIGHT, MotorType.kBrushless);
   private DigitalInput m_leftLimitSwitch = new DigitalInput(Constants.LEFT_LIMIT_SWITCH);
   private DigitalInput m_rightLimitSwitch = new DigitalInput(Constants.RIGHT_LIMIT_SWITCH);
   private RelativeEncoder m_leftEncoder = m_leftClimber.getEncoder();
@@ -31,18 +33,18 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void set(double speed) {
-    if (speed < 0 && (leftLimitSwitchPress() || rightLimitSwitchPress())) {
+    if (speed > 0 && (leftLimitSwitchPress() || rightLimitSwitchPress())) {
       speed = 0;
     }
     m_leftClimber.set(speed);
   }
 
   public boolean leftLimitSwitchPress() {
-    return m_leftLimitSwitch.get();
+    return !m_leftLimitSwitch.get();
   }
 
   public boolean rightLimitSwitchPress() {
-    return m_rightLimitSwitch.get();
+    return !m_rightLimitSwitch.get();
   }
 
   @Override
@@ -54,6 +56,8 @@ public class ClimberSubsystem extends SubsystemBase {
     if (rightLimitSwitchPress()) {
       m_rightEncoder.setPosition(0);
     }
+
+    SmartDashboard.putBoolean("climber limit switch pressed", leftLimitSwitchPress());
   }
 
   @Override

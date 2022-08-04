@@ -8,7 +8,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,13 +25,12 @@ public class ShooterSubsytem extends SubsystemBase {
   private final SparkMaxPIDController m_PIDController;
   private final TunableNumber m_tunableNumberkP = new TunableNumber("Shooter(kP)", 0);
   private final TunableNumber m_tunableNumberkD = new TunableNumber("Shooter(kD)", 0);
-  private final TunableNumber m_tunableNumberkFF = new TunableNumber("Shooter(kFF)", 0);
+  private final TunableNumber m_tunableNumberkFF = new TunableNumber("Shooter(kFF)", 0.0004);
   private final TunableNumber m_tunableNumberkI = new TunableNumber("Shooter(kI)", 0);
   private final TunableNumber m_tunableAllowableError =
       new TunableNumber("Shooter(AllowableError))", 50);
   private final double m_afterEncoderReduction = 0.5;
   public static final double FENDER_RPM = 1000;
-  // TODO
 
   public ShooterSubsytem() {
     m_shooterMotor = new CANSparkMax(Constants.SHOOTER_SPARK, MotorType.kBrushless);
@@ -57,6 +55,7 @@ public class ShooterSubsytem extends SubsystemBase {
       configurePID();
     }
     SmartDashboard.putNumber("shooterRpm", getRPM());
+    // SmartDashboard.putBoolean("atSpeed", checkAtSpeed());
   }
 
   @Override
@@ -65,8 +64,7 @@ public class ShooterSubsytem extends SubsystemBase {
   }
 
   public void setPidRpm(double rpm) {
-    m_PIDController.setReference(
-        rpm, CANSparkMax.ControlType.kVelocity, 0, m_tunableNumberkFF.get(), ArbFFUnits.kVoltage);
+    m_PIDController.setReference(rpm, CANSparkMax.ControlType.kVelocity);
   }
 
   public void configurePID() {

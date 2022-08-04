@@ -23,6 +23,8 @@ public final class Constants {
   public static final int SHOOTER_SPARK = 10;
   public static final int HOPPER_SPARK = 7;
   public static final int SHOOTER_HOOD_SPARK = 11;
+  public static final int CLIMBER_LEFT = 12;
+  public static final int CLIMBER_RIGHT = 13;
 
   // DIO
   public static final int LEFT_LIMIT_SWITCH = 1;
