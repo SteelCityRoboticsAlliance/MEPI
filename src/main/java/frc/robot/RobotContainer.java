@@ -127,19 +127,19 @@ public class RobotContainer {
     new Button(() -> m_driverJoystick.getRightTriggerAxis() > 0.5)
         .whileHeld(new AutoAimCommand(m_drivetrainSubsystem, m_limelightSubsystem));
 
-    // control joystick
+    // control joystic
     new Button(() -> m_controlJoystick.getLeftY() > 0.75)
         .whileHeld(new TowerUpCommand(m_towerSubsystem));
     new Button(() -> m_controlJoystick.getLeftY() < -0.75)
         .whileHeld(new TowerDownCommand(m_towerSubsystem));
-    new Button(() -> m_controlJoystick.getRightY() > 0.75)
-        .whileHeld(new ClimberCommand(m_climberSubsystem, 0.25));
-    new Button(() -> m_controlJoystick.getRightY() < -0.75)
-        .whileHeld(new ClimberCommand(m_climberSubsystem, -0.25));
+    // new Button(() -> m_controlJoystick.getRightY() > 0.75)
+    //     .whileHeld(new ClimberCommand(m_climberSubsystem, 0.25));
+    // new Button(() -> m_controlJoystick.getRightY() < -0.75)
+    //     .whileHeld(new ClimberCommand(m_climberSubsystem, -0.25));
     new Button(() -> m_controlJoystick.getLeftTriggerAxis() > 0.5)
     .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem)).whenReleased(new SetShooterSpeedCommand(m_shooterSubsystem, 0));
     new Button(() -> m_controlJoystick.getRightTriggerAxis() > 0.5)
-    .whileHeld(new KickIfShooterDistanceGoBrrCommand(m_shooterSubsystem, m_towerSubsystem, m_limelightSubsystem, m_shooterLookupTable))).whenReleased(new SetShooterSpeedCommand(m_shooterSubsystem, 0));
+    .whileHeld(new KickIfShooterDistanceGoBrrCommand(m_shooterSubsystem, m_towerSubsystem, m_limelightSubsystem, m_shooterLookupTable)).whenReleased(new SetShooterSpeedCommand(m_shooterSubsystem, 0));
     new JoystickButton(m_controlJoystick, XboxController.Button.kLeftBumper.value)
         .whenHeld(m_shooterPIDCommand).whenReleased(new
     SetShooterSpeedCommand(m_shooterSubsystem, 0));

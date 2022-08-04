@@ -55,7 +55,6 @@ public class ShooterSubsytem extends SubsystemBase {
       configurePID();
     }
     SmartDashboard.putNumber("shooterRpm", getRPM());
-    // SmartDashboard.putBoolean("atSpeed", checkAtSpeed());
   }
 
   @Override
