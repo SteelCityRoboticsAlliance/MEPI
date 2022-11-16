@@ -6,12 +6,15 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class TowerSubsystem extends SubsystemBase {
   private final CANSparkMax m_towerMotor;
   private final CANSparkMax m_towerKicker;
+  private final DigitalInput m_beamBreak = new DigitalInput(9);
 
   /** Creates a new Tower. */
   public TowerSubsystem() {
@@ -28,6 +31,7 @@ public class TowerSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("beam break", m_beamBreak.get());
   }
 
   @Override
@@ -37,6 +41,10 @@ public class TowerSubsystem extends SubsystemBase {
 
   public void setTowerSpeed(double speed) {
     m_towerMotor.set(speed);
+  }
+
+  public boolean getBeamBreak() {
+    return m_beamBreak.get();
   }
 
   public void setKickerSpeed(double speed) {

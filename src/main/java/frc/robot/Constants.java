@@ -27,8 +27,8 @@ public final class Constants {
   public static final int CLIMBER_RIGHT = 13;
 
   // DIO
-  public static final int LEFT_LIMIT_SWITCH = 0;
-  public static final int RIGHT_LIMIT_SWITCH = 1;
+  public static final int LEFT_LIMIT_SWITCH = 1;
+  public static final int RIGHT_LIMIT_SWITCH = 0;
 
   // Odometry
   public static final double DRIVE_CONVERSION_FACTOR = 1;

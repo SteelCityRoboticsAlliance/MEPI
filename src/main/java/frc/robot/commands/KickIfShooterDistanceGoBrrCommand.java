@@ -1,11 +1,11 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.ShooterLookupTable;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsytem;
 import frc.robot.subsystems.TowerSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** An example command that uses an example subsystem. */
 public class KickIfShooterDistanceGoBrrCommand extends CommandBase {
@@ -48,8 +48,9 @@ public class KickIfShooterDistanceGoBrrCommand extends CommandBase {
       m_towerSubsystem.setKickerSpeed(1);
       m_towerSubsystem.setTowerSpeed(0.75);
     }
-    SmartDashboard.putBoolean("kickIfShootDist atSpeed", m_shooterSubsystem.checkAtSpeed(m_shooterLookupTable.getRpmTable(distance)));
-
+    SmartDashboard.putBoolean(
+        "kickIfShootDist atSpeed",
+        m_shooterSubsystem.checkAtSpeed(m_shooterLookupTable.getRpmTable(distance)));
   }
 
   // Called once the command ends or is interrupted.

@@ -36,7 +36,6 @@ public class TowerUpCommand extends CommandBase {
     m_towerSubsystem.setKickerSpeed(-0.5);
   }
 
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

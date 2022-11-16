@@ -13,35 +13,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ClimberCommand;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.commands.ToggleIntakeCommand;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.HopperCommand;
+import frc.robot.commands.KickIfShootSetRPMCommand;
 import frc.robot.commands.RunIntakeCommand;
-import frc.robot.commands.TowerDownCommand;
-import frc.robot.commands.TowerUpCommand;
-import frc.robot.commands.TowerKickerCommand;
-import frc.robot.ShooterLookupTable;
-import frc.robot.commands.ShooterPIDCommand;
-import frc.robot.subsystems.TowerSubsystem;
-import frc.robot.subsystems.ShooterSubsytem;
+import frc.robot.commands.SetShooterSpeedCommand;
+import frc.robot.commands.StopIntakeCommand;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.KickIfShootSetRPMCommand;
-import frc.robot.commands.KickIfShooterDistanceGoBrrCommand;
-import frc.robot.commands.HopperCommand;
-import frc.robot.commands.ToggleIntakeCommand;
-import frc.robot.commands.AutoAimCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
-import frc.robot.commands.SetShooterSpeedCommand;
-
 import frc.robot.subsystems.ShooterSubsytem;
 import frc.robot.subsystems.TowerSubsystem;
-import frc.robot.ShooterLookupTable;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -51,37 +34,26 @@ import frc.robot.ShooterLookupTable;
  */
 public class RobotContainer {
 
-  private final XboxController m_driverJoystick = new XboxController(0);
-  private final XboxController m_controlJoystick = new XboxController(1);
+  private final XboxController m_primary = new XboxController(0);
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-    private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-    private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-  // private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
-    private final ShooterSubsytem m_shooterSubsystem = new ShooterSubsytem();
-    private final TowerSubsystem m_towerSubsystem = new TowerSubsystem();
-    private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
-    private final LimelightSubsystem m_limelightSubsystem = new LimelightSubsystem();
-    private final ShooterLookupTable m_shooterLookupTable = new ShooterLookupTable();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  private final ShooterSubsytem m_shooterSubsystem = new ShooterSubsytem();
+  private final TowerSubsystem m_towerSubsystem = new TowerSubsystem();
+  private final HopperSubsystem m_hopperSubsystem = new HopperSubsystem();
+  //   private final LimelightSubsystem m_limelightSubsystem = new LimelightSubsystem();
+  //   private final ShooterLookupTable m_shooterLookupTable = new ShooterLookupTable();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-    private final RunIntakeCommand m_intakeInCommand =
-        new RunIntakeCommand(m_intakeSubsystem, 0.75, m_hopperSubsystem);
-    private final RunIntakeCommand m_intakeOutCommand =
-        new RunIntakeCommand(m_intakeSubsystem, -0.75, m_hopperSubsystem);
-    private final RunIntakeCommand m_intakeStopCommand =
-        new RunIntakeCommand(m_intakeSubsystem, 0, m_hopperSubsystem);
-    private final DriveCommand m_driveCommand =
-        new DriveCommand(m_drivetrainSubsystem, m_driverJoystick);
-    private final ToggleIntakeCommand m_toggleIntakeCommand =
-        new ToggleIntakeCommand(m_intakeSubsystem);
-    private final TowerUpCommand m_towerUpCommand = new TowerUpCommand(m_towerSubsystem);
-    private final TowerKickerCommand m_towerKickerCommand = new
-  TowerKickerCommand(m_towerSubsystem);
-    private final ShooterPIDCommand m_shooterPIDCommand =
-        new ShooterPIDCommand(m_shooterSubsystem);
-    private final KickIfShootSetRPMCommand m_kickIfShootSetRPMCommand =
-        new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem);
+  private final RunIntakeCommand m_intakeInCommand =
+      new RunIntakeCommand(m_intakeSubsystem, 0.5, m_hopperSubsystem, m_towerSubsystem, 0.5);
+  private final RunIntakeCommand m_intakeOutCommand =
+      new RunIntakeCommand(m_intakeSubsystem, -0.5, m_hopperSubsystem, m_towerSubsystem, -0.5);
+  private final StopIntakeCommand m_intakeStopCommand =
+      new StopIntakeCommand(m_intakeSubsystem, m_hopperSubsystem);
+  private final DriveCommand m_driveCommand = new DriveCommand(m_drivetrainSubsystem, m_primary);
+  // private final KickIfShootSetRPMCommand m_kickIfShootSetRPMCommand =
+  //     new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem);
 
   public RobotContainer() {
     CameraServer.startAutomaticCapture();
@@ -89,9 +61,9 @@ public class RobotContainer {
     configureButtonBindings();
     m_intakeSubsystem.setDefaultCommand(m_intakeStopCommand);
     m_hopperSubsystem.setDefaultCommand(new HopperCommand(m_hopperSubsystem, 0));
-    // m_shooterSubsystem.setDefaultCommand(new ShooterPIDCommand(m_shooterSubsystem, 0));
+    m_shooterSubsystem.setDefaultCommand(new SetShooterSpeedCommand(m_shooterSubsystem, 0));
     m_drivetrainSubsystem.setDefaultCommand(m_driveCommand);
-    //m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, 0));
+    m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, 0));
     ShuffleboardTab testCommands = Shuffleboard.getTab("test commands");
 
     // testCommands.add("ClimbUp", new ClimberCommand(m_climberSubsystem, 0.25));
@@ -118,51 +90,18 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // driver joystick
-    new JoystickButton(m_driverJoystick, XboxController.Button.kLeftBumper.value)
-        .whenHeld(m_intakeInCommand);
-    new JoystickButton(m_driverJoystick, XboxController.Button.kRightBumper.value)
-        .whenHeld(m_intakeOutCommand);
-    new Button(() -> m_driverJoystick.getLeftTriggerAxis() > 0.5)
-        .whileHeld(new ToggleIntakeCommand(m_intakeSubsystem));
-    new Button(() -> m_driverJoystick.getRightTriggerAxis() > 0.5)
-        .whileHeld(new AutoAimCommand(m_drivetrainSubsystem, m_limelightSubsystem));
+    new Button(() -> m_primary.getRightTriggerAxis() > 0.05).whileHeld(m_intakeInCommand);
+    new JoystickButton(m_primary, XboxController.Button.kRightBumper.value)
+        .whileHeld(m_intakeOutCommand);
+    new JoystickButton(m_primary, XboxController.Button.kLeftBumper.value)
+        .whileHeld(new ClimberCommand(m_climberSubsystem, 0.75));
+    new Button(() -> m_primary.getLeftTriggerAxis() > 0.05)
+        .whileHeld(new ClimberCommand(m_climberSubsystem, -0.75));
 
-    // control joystic
-    new Button(() -> m_controlJoystick.getLeftY() > 0.75)
-        .whileHeld(new TowerUpCommand(m_towerSubsystem));
-    new Button(() -> m_controlJoystick.getLeftY() < -0.75)
-        .whileHeld(new TowerDownCommand(m_towerSubsystem));
-    // new Button(() -> m_controlJoystick.getRightY() > 0.75)
-    //     .whileHeld(new ClimberCommand(m_climberSubsystem, 0.25));
-    // new Button(() -> m_controlJoystick.getRightY() < -0.75)
-    //     .whileHeld(new ClimberCommand(m_climberSubsystem, -0.25));
-    new Button(() -> m_controlJoystick.getLeftTriggerAxis() > 0.5)
-    .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem)).whenReleased(new SetShooterSpeedCommand(m_shooterSubsystem, 0));
-    new Button(() -> m_controlJoystick.getRightTriggerAxis() > 0.5)
-    .whileHeld(new KickIfShooterDistanceGoBrrCommand(m_shooterSubsystem, m_towerSubsystem, m_limelightSubsystem, m_shooterLookupTable)).whenReleased(new SetShooterSpeedCommand(m_shooterSubsystem, 0));
-    new JoystickButton(m_controlJoystick, XboxController.Button.kLeftBumper.value)
-        .whenHeld(m_shooterPIDCommand).whenReleased(new
-    SetShooterSpeedCommand(m_shooterSubsystem, 0));
-
-    new JoystickButton(m_controlJoystick, XboxController.Button.kX.value)
-        .whenHeld(m_towerKickerCommand);
-
-    // new JoystickButton(m_joystick, XboxController.Button.kB.value)
-    // .whenPressed(m_intakeOutCommand);
-    // new Button(() -> m_joystick.getLeftTriggerAxis() > 0.5).whileHeld(new
-    // TowerKickerCommand(m_towerSubsystem));
-    // new Button(() -> m_joystick.getRightTriggerAxis() > 0.5).whileHeld(new
-    // ShooterPIDCommand(m_shooterSubsytem, m_tunableShooterGoal.get()));
-    // new JoystickButton(m_joystick, XboxController.Button.kX.value)
-    // .whenHeld(new SetShooterSpeedCommand(m_shooterSubsytem)).whenReleased(() ->
-    // m_shooterSubsytem.setShooterSpeed(0));
-    // new JoystickButton(m_controlJoystick, XboxController.Button.kLeftBumper.value)
-    //     .whenPressed(new ClimberCommand(m_climberSubsystem, 0.5));
-    // new JoystickButton(m_controlJoystick, XboxController.Button.kRightBumper.value)
-    //     .whenPressed(new ClimberCommand(m_climberSubsystem, -0.5));
-    // new POVButton(m_joystick, 0).whenPressed(new ToggleIntakeCommand(m_intakeSubsystem));
-    // new POVButton(m_joystick, 180).whileHeld(new TowerDownCommand(m_towerSubsystem));
-
+    new JoystickButton(m_primary, XboxController.Button.kB.value)
+        .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, 1000));
+    new JoystickButton(m_primary, XboxController.Button.kA.value)
+        .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, 2000));
   }
 
   /**
@@ -172,6 +111,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
 }
