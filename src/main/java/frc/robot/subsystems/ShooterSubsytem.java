@@ -35,6 +35,8 @@ public class ShooterSubsytem extends SubsystemBase {
   public ShooterSubsytem() {
     m_shooterMotor = new CANSparkMax(Constants.SHOOTER_SPARK, MotorType.kBrushless);
     m_hoodMotor = new CANSparkMax(Constants.SHOOTER_HOOD_SPARK, MotorType.kBrushless);
+    m_shooterMotor.setSmartCurrentLimit(50);
+    m_hoodMotor.setSmartCurrentLimit(30);
     m_shooterLookupTable = new ShooterLookupTable();
     m_encoder = m_shooterMotor.getEncoder();
     m_PIDController = m_shooterMotor.getPIDController();

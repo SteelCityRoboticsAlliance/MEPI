@@ -20,6 +20,8 @@ public class TowerSubsystem extends SubsystemBase {
   public TowerSubsystem() {
     m_towerMotor = new CANSparkMax(Constants.TOWER_SPARK, MotorType.kBrushless);
     m_towerKicker = new CANSparkMax(Constants.TOWER_KICKER_SPARK, MotorType.kBrushless);
+    m_towerMotor.setSmartCurrentLimit(30);
+    m_towerKicker.setSmartCurrentLimit(30);
     m_towerMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     m_towerKicker.setIdleMode(CANSparkMax.IdleMode.kCoast);
     m_towerMotor.restoreFactoryDefaults();

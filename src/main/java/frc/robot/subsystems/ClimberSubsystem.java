@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
+
+
   private CANSparkMax m_leftClimber = new CANSparkMax(Constants.CLIMBER_LEFT, MotorType.kBrushless);
   private CANSparkMax m_rightClimber =
       new CANSparkMax(Constants.CLIMBER_RIGHT, MotorType.kBrushless);
@@ -37,6 +39,9 @@ public class ClimberSubsystem extends SubsystemBase {
     m_rightClimber.burnFlash();
 
     m_rightClimber.follow(m_leftClimber, true);
+    m_leftClimber.setSmartCurrentLimit(50);
+    m_rightClimber.setSmartCurrentLimit(50);
+
   }
 
   public void RunClimberPID(double goal) {

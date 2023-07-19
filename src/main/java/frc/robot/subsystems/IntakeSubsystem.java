@@ -18,6 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     m_motor.restoreFactoryDefaults();
     m_motor.setInverted(true);
+    m_motor.setSmartCurrentLimit(50);
     retract();
 
     m_motor.burnFlash();

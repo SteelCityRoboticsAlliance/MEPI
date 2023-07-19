@@ -61,6 +61,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightLeader.restoreFactoryDefaults();
     m_rightFollower.restoreFactoryDefaults();
 
+    m_leftLeader.setSmartCurrentLimit(50);
+    m_leftFollower.setSmartCurrentLimit(50);
+    m_rightLeader.setSmartCurrentLimit(50);
+    m_rightFollower.setSmartCurrentLimit(50);
+
     m_leftLeader.setInverted(true);
 
     m_leftFollower.follow(m_leftLeader);
@@ -112,7 +117,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    var gyroAngle = Rotation2d.fromDegrees(-m_gyro.getAngle());
+    Rotation2d gyroAngle = Rotation2d.fromDegrees(-m_gyro.getAngle());
     m_odometry.update(gyroAngle, m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
     m_field.setRobotPose(m_odometry.getPoseMeters());
   }
