@@ -85,10 +85,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
     if (m_velocityP.hasChanged() || m_velocityI.hasChanged() || m_velocityD.hasChanged()) {
       updateDrivePID();
     }
+
   }
 
   public void control(double speed, double rotation) {
     m_drive.curvatureDrive(speed, rotation, Math.abs(speed) < 0.05);
+  }
+
+  public void smartVelocityControl(double leftVelocity, double rightVelocity){
+    m_leftController.setReference(leftVelocity, ControlType.kVelocity);
+    m_rightController.setReference(rightVelocity, ControlType.kVelocity);
   }
 
   public void applyChassisSpeed(ChassisSpeeds speeds) {
@@ -114,12 +120,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rightController.setD(m_velocityD.get());
   }
 
+  public double leftVelocity() {
+    return m_leftEncoder.getVelocity();
+  }
+
+  public double rightVelocity() {
+    return m_rightEncoder.getVelocity();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     Rotation2d gyroAngle = Rotation2d.fromDegrees(-m_gyro.getAngle());
     m_odometry.update(gyroAngle, m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
     m_field.setRobotPose(m_odometry.getPoseMeters());
+    SmartDashboard.putNumber("Chassis Left Velocity", leftVelocity());
+    SmartDashboard.putNumber("Chassis Right Velocity", rightVelocity());
+
   }
 
   @Override

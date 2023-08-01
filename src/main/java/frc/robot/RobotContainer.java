@@ -82,6 +82,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    /* FOR SIENNA :)
+    moving drivetrain
+    intake out/in
+    shooter + kicker logic
+    conveyor up/down
+    climber up/down
+    kicker separately
+    */
+
+
 
     // driver joystick
     new Button(() -> m_operator.getRightTriggerAxis() > 0.05).whileHeld(m_intakeInCommand);
@@ -106,7 +116,32 @@ public class RobotContainer {
             .whileHeld(new TowerUpCommand(m_towerSubsystem));
     new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
             .whileHeld(new TowerDownCommand(m_towerSubsystem));
+
+    // button making
+    //moving drivetrain
+    new JoystickButton(m_driver,XboxController.Button.kRightStick.value)
+            .whileHeld(new DriveCommandWithPID(m_drivetrainSubsystem));
+
+    // intake in/out
+    new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
+            .whileHeld(new RunIntakeCommand(m_intakeSubsystem, .50, m_hopperSubsystem, m_towerSubsystem, 0.0));
+    new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
+            .whileHeld(new RunIntakeCommand(m_intakeSubsystem, -0.50, m_hopperSubsystem, m_towerSubsystem,0.0));
+
+
+    // climber up and down
+    new JoystickButton(m_operator, XboxController.Button.kLeftBumper.value)
+            .whileHeld(new ClimberCommand(m_climberSubsystem, 1.0));
+    new JoystickButton(m_operator, XboxController.Button.kLeftBumper.value)
+            .whileHeld(new ClimberCommand(m_climberSubsystem, -1.0));
+    // kicker
+    new JoystickButton(m_operator, XboxController.Button.kA.value)
+            .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, m_shooterSubsystem.getRPM()));
+
+//    new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
+//            .whileHeld(new
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
