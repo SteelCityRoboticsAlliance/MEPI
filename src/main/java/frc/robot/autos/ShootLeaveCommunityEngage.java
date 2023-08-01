@@ -6,18 +6,13 @@ import frc.robot.commands.ShooterPIDCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ShooterSubsytem;
 
-public class ShootEngage extends SequentialCommandGroup {
-    public ShootEngage(DrivetrainSubsystem drivetrain, ShooterSubsytem shooter){
-        // PathPlannerTrajectory shootLeaveCommunity = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
-
+public class ShootLeaveCommunityEngage extends SequentialCommandGroup {
+    public ShootLeaveCommunityEngage(ShooterSubsytem shooter, DrivetrainSubsystem drivetrain){
         // STEP 1: shoot a ball
         addCommands(new ShooterPIDCommand(shooter));
 
-        // STEP 2: move back onto charging station
+        // STEP 2: leave community and engage
         addCommands(new DriveCommandWithPID(drivetrain));
 
-
     }
-
-
 }
