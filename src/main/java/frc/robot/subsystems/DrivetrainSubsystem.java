@@ -5,11 +5,13 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.RamseteAutoBuilder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,19 +22,23 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.TunableNumber;
 
+import java.util.Map;
+import java.util.function.Consumer;
+
 // Drive train
 public class DrivetrainSubsystem extends SubsystemBase {
-  private CANSparkMax m_leftLeader =
+  private final CANSparkMax m_leftLeader =
       new CANSparkMax(Constants.DRIVE_LEFT_LEADER, MotorType.kBrushless);
-  private CANSparkMax m_leftFollower =
+  private final CANSparkMax m_leftFollower =
       new CANSparkMax(Constants.DRIVE_LEFT_FOLLOWER, MotorType.kBrushless);
-  private CANSparkMax m_rightLeader =
+  private final CANSparkMax m_rightLeader =
       new CANSparkMax(Constants.DRIVE_RIGHT_LEADER, MotorType.kBrushless);
-  private CANSparkMax m_rightFollower =
+  private final CANSparkMax m_rightFollower =
       new CANSparkMax(Constants.DRIVE_RIGHT_FOLLOWER, MotorType.kBrushless);
   private DifferentialDrive m_drive = new DifferentialDrive(m_leftLeader, m_rightLeader);
   private DifferentialDriveKinematics m_kinematics =
@@ -126,6 +132,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double rightVelocity() {
     return m_rightEncoder.getVelocity();
+  }
+
+  private RamseteAutoBuilder createRamseteAutoBuilder(Map<String, Command> eventMap, Consumer<Pose2d> poseSetter) {
+    return new RamseteAutoBuilder(
+            this::getPose, // Pose supplier
+            poseSetter,
+            new RamseteController(),
+            m_kinematics, // DifferentialDriveKinematics
+            this::smartVelocityControl, // DifferentialDriveWheelSpeeds supplier
+            eventMap,
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            this);
+  }
+
+  public RamseteAutoBuilder ramseteAutoBuilderNoPoseReset(Map<String, Command> eventMap) {
+    return createRamseteAutoBuilder(eventMap, (Pose2d pose) -> {});
   }
 
   @Override
