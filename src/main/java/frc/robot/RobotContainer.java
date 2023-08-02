@@ -8,7 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autos.AutonomousFactory;
 import frc.robot.commands.*;
@@ -24,7 +24,11 @@ public class RobotContainer {
 
   private final XboxController m_operator = new XboxController(0);
 
+  private final CommandXboxController m_operatorCommand = new CommandXboxController(0); 
+
   private final XboxController m_driver  = new XboxController(1);
+
+  private final CommandXboxController m_driverCommand = new CommandXboxController(1); 
 
   // The robot's subsystems and commands are defined here...
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
@@ -95,52 +99,27 @@ public class RobotContainer {
 
 
     // driver joystick
-    new Button(() -> m_operator.getRightTriggerAxis() > 0.05).whileHeld(m_intakeInCommand);
+    m_operatorCommand.rightTrigger().whileTrue(m_intakeInCommand); 
     new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
-        .whileHeld(m_intakeOutCommand);
+        .whileTrue(m_intakeOutCommand);
 
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value)
-        .whileHeld(new ClimberCommand(m_climberSubsystem, 0.75));
-    new Button(() -> m_driver.getLeftTriggerAxis() > 0.05)
-        .whileHeld(new ClimberCommand(m_climberSubsystem, -0.75));
+        .whileTrue(new ClimberCommand(m_climberSubsystem, 0.75));
+    m_driverCommand.leftTrigger().whileTrue(new ClimberCommand(m_climberSubsystem, -0.75)); 
 
     new JoystickButton(m_operator, XboxController.Button.kB.value)
-        .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, 1000));
+        .whileTrue(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, 1000));
     new JoystickButton(m_operator, XboxController.Button.kA.value)
-        .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, 2000));
+        .whileTrue(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, 2000));
 
     //testing: individually shoot out by addressing shooter and tower
     new JoystickButton(m_operator, XboxController.Button.kX.value)
-            .whileHeld(new ShootFromDistanceCommand(m_shooterSubsystem, m_limelightSubsystem, m_shooterLookupTable));
+            .whileTrue(new ShootFromDistanceCommand(m_shooterSubsystem, m_limelightSubsystem, m_shooterLookupTable));
 
     new JoystickButton(m_operator, XboxController.Button.kLeftBumper.value)
-            .whileHeld(new TowerUpCommand(m_towerSubsystem));
+            .whileTrue(new TowerUpCommand(m_towerSubsystem));
     new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
-            .whileHeld(new TowerDownCommand(m_towerSubsystem));
-//
-//    // button making
-//    //moving drivetrain
-//    new JoystickButton(m_driver,XboxController.Button.kRightStick.value)
-//            .whileHeld(new DriveCommandWithPID(m_drivetrainSubsystem));
-//
-//    // intake in/out
-//    new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
-//            .whileHeld(new RunIntakeCommand(m_intakeSubsystem, .50, m_hopperSubsystem, m_towerSubsystem, 0.0));
-//    new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
-//            .whileHeld(new RunIntakeCommand(m_intakeSubsystem, -0.50, m_hopperSubsystem, m_towerSubsystem,0.0));
-//
-//
-//    // climber up and down
-//    new JoystickButton(m_operator, XboxController.Button.kLeftBumper.value)
-//            .whileHeld(new ClimberCommand(m_climberSubsystem, 1.0));
-//    new JoystickButton(m_operator, XboxController.Button.kLeftBumper.value)
-//            .whileHeld(new ClimberCommand(m_climberSubsystem, -1.0));
-//    // kicker
-//    new JoystickButton(m_operator, XboxController.Button.kA.value)
-//            .whileHeld(new KickIfShootSetRPMCommand(m_shooterSubsystem, m_towerSubsystem, m_shooterSubsystem.getRPM()));
-//
-////    new JoystickButton(m_operator, XboxController.Button.kRightBumper.value)
-////            .whileHeld(new
+            .whileTrue(new TowerDownCommand(m_towerSubsystem));
   }
 
 
