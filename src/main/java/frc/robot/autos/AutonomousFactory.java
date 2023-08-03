@@ -9,13 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AutonomousFactory{
-    private static final AutonMode DEFAULT_MODE = AutonMode.PUT_IN_ALL_THE_AUTO_MODES;
+    private static final AutonMode DEFAULT_MODE = AutonMode.SHOOT_4;
 
     private final SendableChooser<AutonMode> m_chooseAutoOption;
 
     //MAKE SURE YOU INCLUDE DO NOTHING and also JUST SHOOTING
     public enum AutonMode {
-        PUT_IN_ALL_THE_AUTO_MODES,
         LINE_TEST,
         CURVE_TEST,
         S_CURVE_TEST,
