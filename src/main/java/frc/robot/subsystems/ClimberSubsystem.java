@@ -19,7 +19,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private CANSparkMax m_leftClimber = new CANSparkMax(Constants.CLIMBER_LEFT, MotorType.kBrushless);
   private CANSparkMax m_rightClimber =
-      new CANSparkMax(Constants.CLIMBER_RIGHT, MotorType.kBrushless);
+          new CANSparkMax(Constants.CLIMBER_RIGHT, MotorType.kBrushless);
   private DigitalInput m_leftLimitSwitch = new DigitalInput(Constants.LEFT_LIMIT_SWITCH);
   private DigitalInput m_rightLimitSwitch = new DigitalInput(Constants.RIGHT_LIMIT_SWITCH);
   private RelativeEncoder m_leftEncoder = m_leftClimber.getEncoder();
@@ -50,11 +50,18 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void set(double speed) {
+    System.out.println("wassuppppp");
+    System.out.println(speed);
     if (speed < 0 && (leftLimitSwitchPress() || rightLimitSwitchPress())) {
       speed = 0;
     }
-    if (speed > 0 && m_leftEncoder.getPosition() > 150) {
-      speed = 0;
+    if (speed > 0 && m_leftEncoder.getPosition() > 150 || m_rightEncoder.getPosition() > 150) {
+       speed = 0;
+    }
+
+    // for testing
+    if (speed != 0) {
+      System.out.println("Trying to climb!!!");
     }
     m_leftClimber.set(speed);
   }
@@ -74,10 +81,7 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (leftLimitSwitchPress() || rightLimitSwitchPress()) {
-      m_leftEncoder.setPosition(0);
-      m_rightEncoder.setPosition(0);
-    }
+
 
     SmartDashboard.putBoolean("left limit", leftLimitSwitchPress());
     SmartDashboard.putBoolean("right limit", rightLimitSwitchPress());
