@@ -7,11 +7,10 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autos.AutonomousFactory;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -43,6 +42,8 @@ public class RobotContainer {
 
   private final ShooterLookupTable m_shooterLookupTable = new ShooterLookupTable();
 
+  private final AutonomousFactory m_autonomousFactory = new AutonomousFactory(m_drivetrainSubsystem, m_shooterSubsystem);
+
   private final RunIntakeCommand m_intakeInCommand =
       new RunIntakeCommand(m_intakeSubsystem, 0.5, m_hopperSubsystem, m_towerSubsystem, 0.5);
   private final RunIntakeCommand m_intakeOutCommand =
@@ -62,7 +63,7 @@ public class RobotContainer {
     m_shooterSubsystem.setDefaultCommand(new SetShooterSpeedCommand(m_shooterSubsystem, 0));
     m_drivetrainSubsystem.setDefaultCommand(m_driveCommand);
     m_climberSubsystem.setDefaultCommand(new ClimberCommand(m_climberSubsystem, 0));
-    ShuffleboardTab testCommands = Shuffleboard.getTab("test commands");
+//    ShuffleboardTab testCommands = Shuffleboard.getTab("test commands");
 
     // testCommands.add("ClimbUp", new ClimberCommand(m_climberSubsystem, 0.25));
     // testCommands.add("ClimbDown", new ClimberCommand(m_climberSubsystem, -0.25));
@@ -86,6 +87,16 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    /* FOR SIENNA :)
+    moving drivetrain
+    intake out/in
+    shooter + kicker logic
+    conveyor up/down
+    climber up/down
+    kicker separately
+    */
+
+
 
     // driver joystick
     m_operatorCommand.rightTrigger().whileTrue(m_intakeInCommand); 
@@ -111,6 +122,7 @@ public class RobotContainer {
             .whileTrue(new TowerDownCommand(m_towerSubsystem));
   }
 
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -118,6 +130,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return m_autonomousFactory.getAutonomousCommand();
   }
 }
