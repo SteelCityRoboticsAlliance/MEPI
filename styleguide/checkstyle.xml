@@ -8,12 +8,21 @@
     <property name="charset" value="UTF-8" />
     <property name="severity" value="error" />
     <property name="fileExtensions" value="java, properties, xml" />
+    <module name="SuppressionFilter">
+        <property name="file"
+            value="${config_loc}/checkstyle_suppressions.xml" />
+    </module>
     <module name="FileTabCharacter">
         <property name="eachLine" value="true" />
     </module>
     <module name="NewlineAtEndOfFile">
         <property name="lineSeparator" value="lf_cr_crlf" />
     </module>
+    <!-- <module name="LineLength"> -->
+    <!-- <property name="fileExtensions" value="java"/> -->
+    <!-- <property name="max" value="200"/> -->
+    <!-- <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/> -->
+    <!-- </module> -->
     <module name="TreeWalker">
         <module name="SuppressWarningsHolder" />
         <module name="OuterTypeFilename" />
