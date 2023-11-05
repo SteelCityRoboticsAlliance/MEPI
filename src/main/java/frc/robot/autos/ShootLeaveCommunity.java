@@ -11,14 +11,14 @@ import frc.robot.subsystems.*;
 import java.util.HashMap;
 
 public class ShootLeaveCommunity extends SequentialCommandGroup {
-   //CONSTRUCTOR
+    //CONSTRUCTOR
     public ShootLeaveCommunity(DrivetrainSubsystem drivetrain, ShooterSubsytem shooter, String path) {
-        PathPlannerTrajectory ShootLeaveCommunity = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
-        Command ShootAndLeaveCommunity = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(ShootLeaveCommunity);
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
+        Command shootAndLeaveCommunity = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(trajectory);
         //shoot a ball
         addCommands(new ShooterPIDCommand(shooter));
 
         //leave community
-        addCommands(ShootAndLeaveCommunity);
+        addCommands(shootAndLeaveCommunity);
     }
 }

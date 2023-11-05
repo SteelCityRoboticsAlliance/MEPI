@@ -9,12 +9,13 @@ import frc.robot.subsystems.*;
 
 import java.util.HashMap;
 
-public class SCurveTest extends SequentialCommandGroup {
-
-    public SCurveTest(DrivetrainSubsystem drivetrain, String path) {
+public class LineTest extends SequentialCommandGroup {
+    //CONSTRUCTOR
+    public LineTest(DrivetrainSubsystem drivetrain, String path) {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
-        Command curveTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(trajectory);
+        Command lineTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(trajectory);
+        // STEP 1: drive!
+        addCommands(lineTest1);
 
-        addCommands(curveTest1);
     }
 }

@@ -4,45 +4,48 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.TunableNumber;
+import com.gos.lib.properties.GosDoubleProperty;
 import frc.robot.subsystems.ShooterSubsytem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
+/**
+ * An example command that uses an example subsystem.
+ */
 public class ShooterPIDCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ShooterSubsytem m_shooterSubsystem;
+    private final ShooterSubsytem m_shooterSubsystem;
 
-  private final TunableNumber m_tunableShooterGoal = new TunableNumber("Shooter Goal", 1000);
+    private final GosDoubleProperty m_tunableShooterGoal = new GosDoubleProperty(false, "Shooter Goal", 1000);
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ShooterPIDCommand(ShooterSubsytem shooterSubsystem) {
-    m_shooterSubsystem = shooterSubsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooterSubsystem);
-  }
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param shooterSubsystem The subsystem used by this command.
+     */
+    public ShooterPIDCommand(ShooterSubsytem shooterSubsystem) {
+        m_shooterSubsystem = shooterSubsystem;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(shooterSubsystem);
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    m_shooterSubsystem.setPidRpm(m_tunableShooterGoal.get());
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        m_shooterSubsystem.setPidRpm(m_tunableShooterGoal.getValue());
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return m_shooterSubsystem.checkAtSpeed(m_tunableShooterGoal.get());
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return m_shooterSubsystem.checkAtSpeed(m_tunableShooterGoal.getValue());
+    }
 }
