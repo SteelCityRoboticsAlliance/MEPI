@@ -3,7 +3,7 @@ package frc.robot.autos;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.ShooterSubsytem;
 
 import java.util.HashMap;
 import java.util.Map;
