@@ -4,65 +4,77 @@
 
 package frc.robot.commands;
 
+import com.gos.lib.properties.PidProperty;
+import com.gos.lib.properties.WpiProfiledPidPropertyBuilder;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.TunableNumber;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-/** An example command that uses an example subsystem. */
+/**
+ * An example command that uses an example subsystem.
+ */
 public class AutoAimCommand extends CommandBase {
-  private final DrivetrainSubsystem m_driveTrainSubsystem;
-  private final LimelightSubsystem m_limelightSubsystem;
-  private final ProfiledPIDController m_controller;
-  private final TunableNumber m_P = new TunableNumber("AutoAim(kP)", 0);
-  private final TunableNumber m_I = new TunableNumber("AutoAim(kI)", 0);
-  private final TunableNumber m_D = new TunableNumber("AutoAim(kD)", 0);
+    private final DrivetrainSubsystem m_driveTrainSubsystem;
+    private final LimelightSubsystem m_limelightSubsystem;
+    private final ProfiledPIDController m_controller;
+    private final PidProperty m_pidProperty;
 
-  /**
-   * Creates a new AutoAimCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public AutoAimCommand(
-      DrivetrainSubsystem driveTrainSubsystem, LimelightSubsystem limelightSubsystem) {
-    m_driveTrainSubsystem = driveTrainSubsystem;
-    m_limelightSubsystem = limelightSubsystem;
-    m_controller =
-        new ProfiledPIDController(
-            m_P.get(),
-            m_I.get(),
-            m_D.get(),
-            new TrapezoidProfile.Constraints(
-                Constants.MAX_TURN_VELOCITY, Constants.MAX_TURN_ACCELERATION));
-    m_controller.setTolerance(5);
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveTrainSubsystem);
-    addRequirements(limelightSubsystem);
-  }
+    /**
+     * Creates a new AutoAimCommand.
+     *
+     * @param subsystem The subsystem used by this command.
+     */
+    public AutoAimCommand(
+            DrivetrainSubsystem driveTrainSubsystem, LimelightSubsystem limelightSubsystem) {
+        m_driveTrainSubsystem = driveTrainSubsystem;
+        m_limelightSubsystem = limelightSubsystem;
+        m_controller =
+                new ProfiledPIDController(
+                        0,
+                        0,
+                        0,
+                        new TrapezoidProfile.Constraints(
+                                Constants.MAX_TURN_VELOCITY, Constants.MAX_TURN_ACCELERATION));
+        m_pidProperty = new WpiProfiledPidPropertyBuilder("AutoAim", false, m_controller)
+                .addP(0)
+                .addI(0)
+                .addD(0)
+                .addMaxVelocity(Constants.MAX_TURN_VELOCITY)
+                .addMaxAcceleration(Constants.MAX_TURN_ACCELERATION)
+                .build();
+        m_controller.setTolerance(5);
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(driveTrainSubsystem);
+        addRequirements(limelightSubsystem);
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    double turnSpeed = m_controller.calculate(m_limelightSubsystem.limelightAngle());
-    ChassisSpeeds chassisSpeed = new ChassisSpeeds(0, 0, turnSpeed);
-    m_driveTrainSubsystem.applyChassisSpeed(chassisSpeed);
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        m_pidProperty.updateIfChanged();
+        double turnSpeed = m_controller.calculate(m_limelightSubsystem.limelightAngle());
+        ChassisSpeeds chassisSpeed = new ChassisSpeeds(0, 0, turnSpeed);
+        m_driveTrainSubsystem.applyChassisSpeed(chassisSpeed);
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return m_controller.atGoal();
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return m_controller.atGoal();
+    }
 }

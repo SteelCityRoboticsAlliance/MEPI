@@ -12,7 +12,7 @@ import frc.robot.subsystems.ShooterSubsytem;
 import java.util.HashMap;
 
 public class ShootEngage extends SequentialCommandGroup {
-    public ShootEngage(DrivetrainSubsystem drivetrain, ShooterSubsytem shooter, String path){
+    public ShootEngage(DrivetrainSubsystem drivetrain, ShooterSubsytem shooter, String path) {
         PathPlannerTrajectory shootAndEngage = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
         Command shootEngage = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(shootAndEngage);
 
@@ -21,8 +21,6 @@ public class ShootEngage extends SequentialCommandGroup {
 
         // STEP 2: move back onto charging station
         addCommands(shootEngage);
-
-
 
 
     }

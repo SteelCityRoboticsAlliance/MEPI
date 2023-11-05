@@ -12,9 +12,9 @@ import java.util.HashMap;
 public class SCurveTest extends SequentialCommandGroup {
 
     public SCurveTest(DrivetrainSubsystem drivetrain, String path) {
-        PathPlannerTrajectory SCurveTest = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
-        Command SCurveTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(SCurveTest);
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
+        Command curveTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(trajectory);
 
-        addCommands(SCurveTest1);
+        addCommands(curveTest1);
     }
 }

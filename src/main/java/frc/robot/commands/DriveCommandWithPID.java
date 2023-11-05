@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class DriveCommandWithPID extends CommandBase {
-    DrivetrainSubsystem m_drivetrain;
+    private final DrivetrainSubsystem m_drivetrain;
 
     public DriveCommandWithPID(DrivetrainSubsystem drivetrainSubsystem) {
         m_drivetrain = drivetrainSubsystem;

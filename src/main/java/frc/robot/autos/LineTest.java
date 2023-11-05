@@ -12,10 +12,10 @@ import java.util.HashMap;
 public class LineTest extends SequentialCommandGroup {
     //CONSTRUCTOR
     public LineTest(DrivetrainSubsystem drivetrain, String path) {
-        PathPlannerTrajectory LineTest = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
-        Command LineTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(LineTest);
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
+        Command lineTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(trajectory);
         // STEP 1: drive!
-        addCommands(LineTest1);
+        addCommands(lineTest1);
 
     }
 }

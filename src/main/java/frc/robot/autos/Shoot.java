@@ -5,7 +5,7 @@ import frc.robot.commands.ShooterPIDCommand;
 import frc.robot.subsystems.ShooterSubsytem;
 
 public class Shoot extends SequentialCommandGroup {
-    public Shoot(ShooterSubsytem shooterSubsytem){
+    public Shoot(ShooterSubsytem shooterSubsytem) {
         addCommands(new ShooterPIDCommand(shooterSubsytem));
     }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.gos.lib.properties.PidProperty;
+import com.gos.lib.rev.RevPidPropertyBuilder;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
 import com.revrobotics.CANSparkMax;
@@ -25,144 +27,148 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.TunableNumber;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
 // Drive train
+@SuppressWarnings("PMD.TooManyMethods")
 public class DrivetrainSubsystem extends SubsystemBase {
-  private final CANSparkMax m_leftLeader =
-      new CANSparkMax(Constants.DRIVE_LEFT_LEADER, MotorType.kBrushless);
-  private final CANSparkMax m_leftFollower =
-      new CANSparkMax(Constants.DRIVE_LEFT_FOLLOWER, MotorType.kBrushless);
-  private final CANSparkMax m_rightLeader =
-      new CANSparkMax(Constants.DRIVE_RIGHT_LEADER, MotorType.kBrushless);
-  private final CANSparkMax m_rightFollower =
-      new CANSparkMax(Constants.DRIVE_RIGHT_FOLLOWER, MotorType.kBrushless);
-  private DifferentialDrive m_drive = new DifferentialDrive(m_leftLeader, m_rightLeader);
-  private DifferentialDriveKinematics m_kinematics =
-      new DifferentialDriveKinematics(Constants.DRIVE_TRACK);
+    private final CANSparkMax m_leftLeader =
+            new CANSparkMax(Constants.DRIVE_LEFT_LEADER, MotorType.kBrushless);
+    private final CANSparkMax m_leftFollower =
+            new CANSparkMax(Constants.DRIVE_LEFT_FOLLOWER, MotorType.kBrushless);
+    private final CANSparkMax m_rightLeader =
+            new CANSparkMax(Constants.DRIVE_RIGHT_LEADER, MotorType.kBrushless);
+    private final CANSparkMax m_rightFollower =
+            new CANSparkMax(Constants.DRIVE_RIGHT_FOLLOWER, MotorType.kBrushless);
+    private final DifferentialDrive m_drive = new DifferentialDrive(m_leftLeader, m_rightLeader);
+    private final DifferentialDriveKinematics m_kinematics =
+            new DifferentialDriveKinematics(Constants.DRIVE_TRACK);
 
-  // odometry
-  private RelativeEncoder m_leftEncoder = m_leftLeader.getEncoder();
-  private RelativeEncoder m_rightEncoder = m_rightLeader.getEncoder();
-  private AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-  private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0), 0, 0);
-  private Field2d m_field = new Field2d();
+    // odometry
+    private final RelativeEncoder m_leftEncoder = m_leftLeader.getEncoder();
+    private final RelativeEncoder m_rightEncoder = m_rightLeader.getEncoder();
+    private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+    private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0), 0, 0);
+    private final Field2d m_field = new Field2d();
 
-  // PID
-  private SparkMaxPIDController m_leftController = m_leftLeader.getPIDController();
-  private SparkMaxPIDController m_rightController = m_rightLeader.getPIDController();
-  private TunableNumber m_velocityP = new TunableNumber("Drive Train Velocity P", 1);
-  private TunableNumber m_velocityI = new TunableNumber("Drive Train Velocity I");
-  private TunableNumber m_velocityD = new TunableNumber("Drive Train Velocity D");
+    // PID
+    private final SparkMaxPIDController m_leftController = m_leftLeader.getPIDController();
+    private final SparkMaxPIDController m_rightController = m_rightLeader.getPIDController();
+    private final PidProperty m_leftPidProperty;
+    private final PidProperty m_rightPidProperty;
 
-  /** Creates a new DrivetrainSubsystem. */
-  public DrivetrainSubsystem() {
-    m_gyro.calibrate();
+    /**
+     * Creates a new DrivetrainSubsystem.
+     */
+    public DrivetrainSubsystem() {
+        m_gyro.calibrate();
 
-    m_leftLeader.restoreFactoryDefaults();
-    m_leftFollower.restoreFactoryDefaults();
-    m_rightLeader.restoreFactoryDefaults();
-    m_rightFollower.restoreFactoryDefaults();
+        m_leftLeader.restoreFactoryDefaults();
+        m_leftFollower.restoreFactoryDefaults();
+        m_rightLeader.restoreFactoryDefaults();
+        m_rightFollower.restoreFactoryDefaults();
 
-    m_leftLeader.setSmartCurrentLimit(50);
-    m_leftFollower.setSmartCurrentLimit(50);
-    m_rightLeader.setSmartCurrentLimit(50);
-    m_rightFollower.setSmartCurrentLimit(50);
+        m_leftLeader.setSmartCurrentLimit(50);
+        m_leftFollower.setSmartCurrentLimit(50);
+        m_rightLeader.setSmartCurrentLimit(50);
+        m_rightFollower.setSmartCurrentLimit(50);
 
-    m_leftLeader.setInverted(true);
+        m_leftLeader.setInverted(true);
 
-    m_leftFollower.follow(m_leftLeader);
-    m_rightFollower.follow(m_rightLeader);
+        m_leftFollower.follow(m_leftLeader);
+        m_rightFollower.follow(m_rightLeader);
 
-    m_leftEncoder.setPositionConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
-    m_rightEncoder.setPositionConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
-    m_leftEncoder.setVelocityConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
-    m_rightEncoder.setVelocityConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
+        m_leftEncoder.setPositionConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
+        m_rightEncoder.setPositionConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
+        m_leftEncoder.setVelocityConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
+        m_rightEncoder.setVelocityConversionFactor(Constants.DRIVE_CONVERSION_FACTOR);
 
-    m_leftLeader.burnFlash();
-    m_leftFollower.burnFlash();
-    m_rightLeader.burnFlash();
-    m_rightFollower.burnFlash();
+        m_leftLeader.burnFlash();
+        m_leftFollower.burnFlash();
+        m_rightLeader.burnFlash();
+        m_rightFollower.burnFlash();
 
-    SmartDashboard.putData(m_field);
-    if (m_velocityP.hasChanged() || m_velocityI.hasChanged() || m_velocityD.hasChanged()) {
-      updateDrivePID();
+        SmartDashboard.putData(m_field);
+
+        m_leftPidProperty = createDrivetrainProperty(m_leftController);
+        m_rightPidProperty = createDrivetrainProperty(m_rightController);
+
     }
 
-  }
+    private PidProperty createDrivetrainProperty(SparkMaxPIDController pidController) {
+        return new RevPidPropertyBuilder("Drivetrain", false, pidController, 0)
+                .addP(1)
+                .addI(0)
+                .addD(0)
+                .build();
+    }
 
-  public void control(double speed, double rotation) {
-    m_drive.curvatureDrive(speed, rotation, Math.abs(speed) < 0.05);
-  }
+    public void control(double speed, double rotation) {
+        m_drive.curvatureDrive(speed, rotation, Math.abs(speed) < 0.05);
+    }
 
-  public void smartVelocityControl(double leftVelocity, double rightVelocity){
-    m_leftController.setReference(leftVelocity, ControlType.kVelocity);
-    m_rightController.setReference(rightVelocity, ControlType.kVelocity);
-  }
+    public void smartVelocityControl(double leftVelocity, double rightVelocity) {
+        m_leftController.setReference(leftVelocity, ControlType.kVelocity);
+        m_rightController.setReference(rightVelocity, ControlType.kVelocity);
+    }
 
-  public void applyChassisSpeed(ChassisSpeeds speeds) {
-    DifferentialDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
-    applyWheelSpeed(wheelSpeeds);
-  }
+    public void applyChassisSpeed(ChassisSpeeds speeds) {
+        DifferentialDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
+        applyWheelSpeed(wheelSpeeds);
+    }
 
-  public void applyWheelSpeed(DifferentialDriveWheelSpeeds speeds) {
-    m_leftController.setReference(speeds.leftMetersPerSecond, ControlType.kSmartVelocity);
-    m_rightController.setReference(speeds.rightMetersPerSecond, ControlType.kSmartVelocity);
-  }
+    public void applyWheelSpeed(DifferentialDriveWheelSpeeds speeds) {
+        m_leftController.setReference(speeds.leftMetersPerSecond, ControlType.kSmartVelocity);
+        m_rightController.setReference(speeds.rightMetersPerSecond, ControlType.kSmartVelocity);
+    }
 
-  public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
-  }
+    public Pose2d getPose() {
+        return m_odometry.getPoseMeters();
+    }
 
-  public void updateDrivePID() {
-    m_leftController.setP(m_velocityP.get());
-    m_leftController.setI(m_velocityI.get());
-    m_leftController.setD(m_velocityD.get());
-    m_rightController.setP(m_velocityP.get());
-    m_rightController.setI(m_velocityI.get());
-    m_rightController.setD(m_velocityD.get());
-  }
+    public double leftVelocity() {
+        return m_leftEncoder.getVelocity();
+    }
 
-  public double leftVelocity() {
-    return m_leftEncoder.getVelocity();
-  }
+    public double rightVelocity() {
+        return m_rightEncoder.getVelocity();
+    }
 
-  public double rightVelocity() {
-    return m_rightEncoder.getVelocity();
-  }
+    private RamseteAutoBuilder createRamseteAutoBuilder(Map<String, Command> eventMap, Consumer<Pose2d> poseSetter) {
+        return new RamseteAutoBuilder(
+                this::getPose, // Pose supplier
+                poseSetter,
+                new RamseteController(),
+                m_kinematics, // DifferentialDriveKinematics
+                this::smartVelocityControl, // DifferentialDriveWheelSpeeds supplier
+                eventMap,
+                true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+                this);
+    }
 
-  private RamseteAutoBuilder createRamseteAutoBuilder(Map<String, Command> eventMap, Consumer<Pose2d> poseSetter) {
-    return new RamseteAutoBuilder(
-            this::getPose, // Pose supplier
-            poseSetter,
-            new RamseteController(),
-            m_kinematics, // DifferentialDriveKinematics
-            this::smartVelocityControl, // DifferentialDriveWheelSpeeds supplier
-            eventMap,
-            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-            this);
-  }
+    public RamseteAutoBuilder ramseteAutoBuilderNoPoseReset(Map<String, Command> eventMap) {
+        return createRamseteAutoBuilder(eventMap, (Pose2d pose) -> {
+        });
+    }
 
-  public RamseteAutoBuilder ramseteAutoBuilderNoPoseReset(Map<String, Command> eventMap) {
-    return createRamseteAutoBuilder(eventMap, (Pose2d pose) -> {});
-  }
+    @Override
+    public void periodic() {
+        m_leftPidProperty.updateIfChanged();
+        m_rightPidProperty.updateIfChanged();
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    Rotation2d gyroAngle = Rotation2d.fromDegrees(-m_gyro.getAngle());
-    m_odometry.update(gyroAngle, m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
-    m_field.setRobotPose(m_odometry.getPoseMeters());
-    SmartDashboard.putNumber("Chassis Left Velocity", leftVelocity());
-    SmartDashboard.putNumber("Chassis Right Velocity", rightVelocity());
+        // This method will be called once per scheduler run
+        Rotation2d gyroAngle = Rotation2d.fromDegrees(-m_gyro.getAngle());
+        m_odometry.update(gyroAngle, m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
+        m_field.setRobotPose(m_odometry.getPoseMeters());
+        SmartDashboard.putNumber("Chassis Left Velocity", leftVelocity());
+        SmartDashboard.putNumber("Chassis Right Velocity", rightVelocity());
 
-  }
+    }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+    @Override
+    public void simulationPeriodic() {
+        // This method will be called once per scheduler run during simulation
+    }
 }
