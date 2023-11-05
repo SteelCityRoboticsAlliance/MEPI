@@ -4,9 +4,9 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TowerSubsystem;
 
 /**
@@ -27,12 +27,7 @@ public class RunIntakeCommand extends CommandBase {
      *
      * @param subsystem The subsystem used by this command.
      */
-    public RunIntakeCommand(
-            IntakeSubsystem intakeSubsystem,
-            double intakeSpeed,
-            HopperSubsystem hopperSubsystem,
-            TowerSubsystem towerSubsystem,
-            double towerSpeed) {
+    public RunIntakeCommand(IntakeSubsystem intakeSubsystem, double intakeSpeed, HopperSubsystem hopperSubsystem, TowerSubsystem towerSubsystem, double towerSpeed) {
         m_intakeSubsystem = intakeSubsystem;
         m_hopperSubsystem = hopperSubsystem;
         m_towerSubsystem = towerSubsystem;

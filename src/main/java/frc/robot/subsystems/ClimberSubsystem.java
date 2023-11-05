@@ -7,23 +7,23 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import frc.robot.Constants;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class ClimberSubsystem extends SubsystemBase {
     private final CANSparkMax m_leftClimber = new CANSparkMax(Constants.CLIMBER_LEFT, MotorType.kBrushless);
     private final CANSparkMax m_rightClimber =
-            new CANSparkMax(Constants.CLIMBER_RIGHT, MotorType.kBrushless);
+        new CANSparkMax(Constants.CLIMBER_RIGHT, MotorType.kBrushless);
     private final DigitalInput m_leftLimitSwitch = new DigitalInput(Constants.LEFT_LIMIT_SWITCH);
     private final DigitalInput m_rightLimitSwitch = new DigitalInput(Constants.RIGHT_LIMIT_SWITCH);
     private final RelativeEncoder m_leftEncoder = m_leftClimber.getEncoder();
     private final RelativeEncoder m_rightEncoder = m_rightClimber.getEncoder();
-    private final ProfiledPIDController m_climberPID =
-            new ProfiledPIDController(3.5, 0.0, 0.0, new Constraints(20.0, 150.0), 0.02);
+    private final ProfiledPIDController m_climberPID = new ProfiledPIDController(
+        3.5, 0.0, 0.0, new Constraints(20.0, 150.0), 0.02);
 
     /**
      * Creates a new ClimberSubsystem.
@@ -39,13 +39,13 @@ public class ClimberSubsystem extends SubsystemBase {
         m_rightClimber.follow(m_leftClimber, true);
         m_leftClimber.setSmartCurrentLimit(50);
         m_rightClimber.setSmartCurrentLimit(50);
-
     }
 
     public void runClimberPID(double goal) {
         m_climberPID.setGoal(goal);
         set(m_climberPID.calculate(m_leftEncoder.getPosition()));
     }
+
 
     @SuppressWarnings("PMD.AvoidReassigningParameters")
     public void set(double speed) {

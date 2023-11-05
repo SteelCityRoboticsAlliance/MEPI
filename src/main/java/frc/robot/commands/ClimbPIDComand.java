@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ClimbPIDComand extends CommandBase {
     private final ClimberSubsystem m_climberSubsystem;
@@ -24,13 +24,13 @@ public class ClimbPIDComand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(m_climberSubsystem.getPIDPosition()) < 100
-                || (m_climberSubsystem.leftLimitSwitchPress()
-                || m_climberSubsystem.rightLimitSwitchPress());
+        return Math.abs(m_climberSubsystem.getPIDPosition()) < 100 || (m_climberSubsystem.leftLimitSwitchPress() || m_climberSubsystem.rightLimitSwitchPress());
     }
 
     @Override
     public void end(boolean interrupted) {
         m_climberSubsystem.set(0);
     }
+
+
 }

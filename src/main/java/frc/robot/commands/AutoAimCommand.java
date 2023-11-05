@@ -6,14 +6,13 @@ package frc.robot.commands;
 
 import com.gos.lib.properties.PidProperty;
 import com.gos.lib.properties.WpiProfiledPidPropertyBuilder;
-
+import frc.robot.Constants;
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
 
 /**
  * An example command that uses an example subsystem.
@@ -22,7 +21,7 @@ public class AutoAimCommand extends CommandBase {
     private final DrivetrainSubsystem m_driveTrainSubsystem;
     private final LimelightSubsystem m_limelightSubsystem;
     private final ProfiledPIDController m_controller;
-    private final PidProperty m_pidProperty;
+    private final PidProperty m_pidProperties;
 
     /**
      * Creates a new AutoAimCommand.
@@ -30,23 +29,21 @@ public class AutoAimCommand extends CommandBase {
      * @param subsystem The subsystem used by this command.
      */
     public AutoAimCommand(
-            DrivetrainSubsystem driveTrainSubsystem, LimelightSubsystem limelightSubsystem) {
+        DrivetrainSubsystem driveTrainSubsystem, LimelightSubsystem limelightSubsystem) {
         m_driveTrainSubsystem = driveTrainSubsystem;
         m_limelightSubsystem = limelightSubsystem;
         m_controller =
-                new ProfiledPIDController(
-                        0,
-                        0,
-                        0,
-                        new TrapezoidProfile.Constraints(
-                                Constants.MAX_TURN_VELOCITY, Constants.MAX_TURN_ACCELERATION));
-        m_pidProperty = new WpiProfiledPidPropertyBuilder("AutoAim", false, m_controller)
-                .addP(0)
-                .addI(0)
-                .addD(0)
-                .addMaxVelocity(Constants.MAX_TURN_VELOCITY)
-                .addMaxAcceleration(Constants.MAX_TURN_ACCELERATION)
-                .build();
+            new ProfiledPIDController(
+                0,
+                0,
+                0,
+                new TrapezoidProfile.Constraints(
+                    Constants.MAX_TURN_VELOCITY, Constants.MAX_TURN_ACCELERATION));
+        m_pidProperties = new WpiProfiledPidPropertyBuilder("AutoAim", false, m_controller)
+            .addP(0)
+            .addI(0)
+            .addD(0)
+            .build();
         m_controller.setTolerance(5);
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(driveTrainSubsystem);
@@ -61,7 +58,8 @@ public class AutoAimCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_pidProperty.updateIfChanged();
+        m_pidProperties.updateIfChanged();
+
         double turnSpeed = m_controller.calculate(m_limelightSubsystem.limelightAngle());
         ChassisSpeeds chassisSpeed = new ChassisSpeeds(0, 0, turnSpeed);
         m_driveTrainSubsystem.applyChassisSpeed(chassisSpeed);

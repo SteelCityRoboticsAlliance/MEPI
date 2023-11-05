@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsytem;
 import frc.robot.subsystems.TowerSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
@@ -43,8 +43,7 @@ public class KickIfShootSetRPMCommand extends CommandBase {
             m_towerSubsystem.setKickerSpeed(1);
             m_towerSubsystem.setTowerSpeed(0.75);
         }
-        SmartDashboard.putBoolean(
-                "kickIfShootRPM atSpeed", m_shooterSubsystem.checkAtSpeed(m_rpm));
+        SmartDashboard.putBoolean("kickIfShootRPM atSpeed", m_shooterSubsystem.checkAtSpeed(m_rpm));
     }
 
     // Called once the command ends or is interrupted.

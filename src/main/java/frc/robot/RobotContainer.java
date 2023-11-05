@@ -4,15 +4,30 @@
 
 package frc.robot;
 
+import frc.robot.commands.ClimberCommand;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.HopperCommand;
+import frc.robot.commands.KickIfShootSetRPMCommand;
+import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.SetShooterSpeedCommand;
+import frc.robot.commands.StopIntakeCommand;
+import frc.robot.commands.ShootFromDistanceCommand;
+import frc.robot.commands.TowerDownCommand;
+import frc.robot.commands.TowerUpCommand;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.ShooterSubsytem;
+import frc.robot.subsystems.TowerSubsystem;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.autos.AutonomousFactory;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.autos.AutonomousFactory;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

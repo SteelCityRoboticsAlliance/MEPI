@@ -5,15 +5,13 @@
 package frc.robot.commands;
 
 import com.gos.lib.properties.GosDoubleProperty;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsytem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
  */
 public class ShooterPIDCommand extends CommandBase {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final ShooterSubsytem m_shooterSubsystem;
 
     private final GosDoubleProperty m_tunableShooterGoal = new GosDoubleProperty(false, "Shooter Goal", 1000);
@@ -21,7 +19,7 @@ public class ShooterPIDCommand extends CommandBase {
     /**
      * Creates a new ExampleCommand.
      *
-     * @param subsystem The subsystem used by this command.
+     * @param shooterSubsystem The subsystem used by this command.
      */
     public ShooterPIDCommand(ShooterSubsytem shooterSubsystem) {
         m_shooterSubsystem = shooterSubsystem;

@@ -4,9 +4,9 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
 
 /**
  * An example command that uses an example subsystem.
@@ -37,7 +37,7 @@ public class DriveCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.control(-0.5 * m_joystick.getLeftY(), 0.5 * m_joystick.getRightX());
+        m_subsystem.control(-m_joystick.getLeftY(), m_joystick.getRightX());
     }
 
     // Called once the command ends or is interrupted.

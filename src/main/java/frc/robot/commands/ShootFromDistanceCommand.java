@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.ShooterLookupTable;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsytem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
@@ -21,9 +21,9 @@ public class ShootFromDistanceCommand extends CommandBase {
      * @param subsystem The subsystem used by this command.
      */
     public ShootFromDistanceCommand(
-            ShooterSubsytem subsystem,
-            LimelightSubsystem limelightsubsystem,
-            ShooterLookupTable shooterLookupTable) {
+        ShooterSubsytem subsystem,
+        LimelightSubsystem limelightsubsystem,
+        ShooterLookupTable shooterLookupTable) {
         m_shooterSubsystem = subsystem;
         m_limelightSubsystem = limelightsubsystem;
         m_shooterLookupTable = shooterLookupTable;
@@ -52,6 +52,6 @@ public class ShootFromDistanceCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         return m_shooterSubsystem.checkAtSpeed(
-                m_shooterLookupTable.getRpmTable(m_limelightSubsystem.limelightDistance()));
+            m_shooterLookupTable.getRpmTable(m_limelightSubsystem.limelightDistance()));
     }
 }

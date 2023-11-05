@@ -8,12 +8,16 @@ import com.gos.lib.properties.PidProperty;
 import com.gos.lib.rev.RevPidPropertyBuilder;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.RamseteAutoBuilder;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SimableCANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -24,46 +28,54 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import org.snobotv2.module_wrappers.navx.NavxWrapper;
+import org.snobotv2.module_wrappers.rev.RevEncoderSimWrapper;
+import org.snobotv2.module_wrappers.rev.RevMotorControllerSimWrapper;
+import org.snobotv2.sim_wrappers.DifferentialDrivetrainSimWrapper;
 
 import java.util.Map;
 import java.util.function.Consumer;
 
 // Drive train
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.TooManyFields"})
 public class DrivetrainSubsystem extends SubsystemBase {
-    private final CANSparkMax m_leftLeader =
-            new CANSparkMax(Constants.DRIVE_LEFT_LEADER, MotorType.kBrushless);
-    private final CANSparkMax m_leftFollower =
-            new CANSparkMax(Constants.DRIVE_LEFT_FOLLOWER, MotorType.kBrushless);
-    private final CANSparkMax m_rightLeader =
-            new CANSparkMax(Constants.DRIVE_RIGHT_LEADER, MotorType.kBrushless);
-    private final CANSparkMax m_rightFollower =
-            new CANSparkMax(Constants.DRIVE_RIGHT_FOLLOWER, MotorType.kBrushless);
+    private final SimableCANSparkMax m_leftLeader =
+        new SimableCANSparkMax(Constants.DRIVE_LEFT_LEADER, MotorType.kBrushless);
+    private final SimableCANSparkMax m_leftFollower =
+        new SimableCANSparkMax(Constants.DRIVE_LEFT_FOLLOWER, MotorType.kBrushless);
+    private final SimableCANSparkMax m_rightLeader =
+        new SimableCANSparkMax(Constants.DRIVE_RIGHT_LEADER, MotorType.kBrushless);
+    private final SimableCANSparkMax m_rightFollower =
+        new SimableCANSparkMax(Constants.DRIVE_RIGHT_FOLLOWER, MotorType.kBrushless);
     private final DifferentialDrive m_drive = new DifferentialDrive(m_leftLeader, m_rightLeader);
     private final DifferentialDriveKinematics m_kinematics =
-            new DifferentialDriveKinematics(Constants.DRIVE_TRACK);
+        new DifferentialDriveKinematics(Constants.DRIVE_TRACK);
 
     // odometry
     private final RelativeEncoder m_leftEncoder = m_leftLeader.getEncoder();
     private final RelativeEncoder m_rightEncoder = m_rightLeader.getEncoder();
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-    private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0), 0, 0);
+    private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(new Rotation2d(), 0, 0);
     private final Field2d m_field = new Field2d();
 
     // PID
     private final SparkMaxPIDController m_leftController = m_leftLeader.getPIDController();
+    private final PidProperty m_leftProperties;
     private final SparkMaxPIDController m_rightController = m_rightLeader.getPIDController();
-    private final PidProperty m_leftPidProperty;
-    private final PidProperty m_rightPidProperty;
+    private final PidProperty m_rightProperties;
+
+    // Simulation
+    private DifferentialDrivetrainSimWrapper m_simulator;
 
     /**
      * Creates a new DrivetrainSubsystem.
      */
     public DrivetrainSubsystem() {
         m_gyro.calibrate();
+
+        m_leftProperties = setupVelocityPidValues(m_leftController);
+        m_rightProperties = setupVelocityPidValues(m_rightController);
 
         m_leftLeader.restoreFactoryDefaults();
         m_leftFollower.restoreFactoryDefaults();
@@ -92,17 +104,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         SmartDashboard.putData(m_field);
 
-        m_leftPidProperty = createDrivetrainProperty(m_leftController);
-        m_rightPidProperty = createDrivetrainProperty(m_rightController);
 
+        if (RobotBase.isSimulation()) {
+            DifferentialDrivetrainSim drivetrainSim = DifferentialDrivetrainSim.createKitbotSim(
+                DifferentialDrivetrainSim.KitbotMotor.kDoubleNEOPerSide,
+                DifferentialDrivetrainSim.KitbotGearing.k5p95,
+                DifferentialDrivetrainSim.KitbotWheelSize.kSixInch,
+                null);
+            m_simulator = new DifferentialDrivetrainSimWrapper(
+                drivetrainSim,
+                new RevMotorControllerSimWrapper(m_leftLeader),
+                new RevMotorControllerSimWrapper(m_rightLeader),
+                RevEncoderSimWrapper.create(m_leftLeader),
+                RevEncoderSimWrapper.create(m_rightLeader),
+                new NavxWrapper().getYawGyro());
+            m_simulator.setRightInverted(false);
+        }
     }
 
-    private PidProperty createDrivetrainProperty(SparkMaxPIDController pidController) {
-        return new RevPidPropertyBuilder("Drivetrain", false, pidController, 0)
-                .addP(1)
-                .addI(0)
-                .addD(0)
-                .build();
+    private PidProperty setupVelocityPidValues(SparkMaxPIDController pidController) {
+        return new RevPidPropertyBuilder("ChassisVelocity", false, pidController, 0)
+            .addP(1)
+            .addI(0)
+            .addD(0)
+            .build();
     }
 
     public void control(double speed, double rotation) {
@@ -155,20 +180,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_leftPidProperty.updateIfChanged();
-        m_rightPidProperty.updateIfChanged();
 
         // This method will be called once per scheduler run
-        Rotation2d gyroAngle = Rotation2d.fromDegrees(-m_gyro.getAngle());
+        var gyroAngle = Rotation2d.fromDegrees(-m_gyro.getAngle());
         m_odometry.update(gyroAngle, m_leftEncoder.getPosition(), m_rightEncoder.getPosition());
         m_field.setRobotPose(m_odometry.getPoseMeters());
         SmartDashboard.putNumber("Chassis Left Velocity", leftVelocity());
         SmartDashboard.putNumber("Chassis Right Velocity", rightVelocity());
 
+        m_leftProperties.updateIfChanged();
+        m_rightProperties.updateIfChanged();
     }
 
     @Override
     public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
+        m_simulator.update();
     }
 }

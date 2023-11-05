@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -12,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -38,7 +38,7 @@ public class TrajectoryCommand extends CommandBase {
             m_trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
         } catch (IOException ex) {
             DriverStation.reportError(
-                    "Unable to open trajectory: " + trajectoryPathName, ex.getStackTrace());
+                "Unable to open trajectory: " + trajectoryPathName, ex.getStackTrace());
         }
         m_timer = new Timer();
         m_controller = new RamseteController();

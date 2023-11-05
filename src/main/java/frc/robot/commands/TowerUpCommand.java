@@ -4,22 +4,21 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.TowerSubsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * An example command that uses an example subsystem.
  */
 public class TowerUpCommand extends CommandBase {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    private final TowerSubsystem m_towerSubsystem;
-
     private static final double SPEED = 0.5;
+
+    private final TowerSubsystem m_towerSubsystem;
 
     /**
      * Creates a new TowerUpCommand.
      *
-     * @param subsystem The subsystem used by this command.
+     * @param towerSubsystem The subsystem used by this command.
      */
     public TowerUpCommand(TowerSubsystem towerSubsystem) {
         m_towerSubsystem = towerSubsystem;
@@ -38,6 +37,7 @@ public class TowerUpCommand extends CommandBase {
         m_towerSubsystem.setTowerSpeed(SPEED);
         m_towerSubsystem.setKickerSpeed(-0.5);
     }
+
 
     // Called once the command ends or is interrupted.
     @Override
