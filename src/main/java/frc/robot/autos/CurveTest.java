@@ -8,8 +8,8 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import java.util.HashMap;
 
-public class curveTest extends SequentialCommandGroup {
-    public curveTest(DrivetrainSubsystem drivetrain, String path){
+public class CurveTest extends SequentialCommandGroup {
+    public CurveTest(DrivetrainSubsystem drivetrain, String path){
         PathPlannerTrajectory curveTest = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
         Command curveTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(curveTest);
 

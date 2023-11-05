@@ -9,9 +9,9 @@ import frc.robot.subsystems.*;
 
 import java.util.HashMap;
 
-public class lineTest extends SequentialCommandGroup {
+public class LineTest extends SequentialCommandGroup {
     //CONSTRUCTOR
-    public lineTest(DrivetrainSubsystem drivetrain, String path) {
+    public LineTest(DrivetrainSubsystem drivetrain, String path) {
         PathPlannerTrajectory LineTest = PathPlanner.loadPath(path, Constants.DEFAULT_PATH_CONSTRAINTS, true);
         Command LineTest1 = drivetrain.ramseteAutoBuilderNoPoseReset(new HashMap<>()).fullAuto(LineTest);
         // STEP 1: drive!
